@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
@@ -64,7 +65,13 @@ public class SpeedAI {
         Gson gson = new Gson();
 
         // Parse json string to GameStatus object
-        gameStatus = gson.fromJson(message, GameStatus.class);
+        try{
+            gameStatus = gson.fromJson(message, GameStatus.class);
+        }catch (JsonSyntaxException e){
+            // message is not a GameStatus Object
+            LOGGER.log(Level.INFO, "Server >> " + message);
+            return;
+        }
 
         // Print Map TODO Maybe Graphical Map on Endpoint?
         // System.out.println(gameStatus.getMap());
