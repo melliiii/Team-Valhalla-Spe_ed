@@ -2,12 +2,12 @@ import com.google.gson.Gson;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -37,6 +37,7 @@ public class SpeedAI {
     static Action nextAction = Action.change_nothing;
     static boolean action_changed = false;
 
+
     public static void main(String[] args) {
 
         try {
@@ -48,6 +49,7 @@ public class SpeedAI {
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
+            SpeedAI.shutdown(1);
         } catch (WebSocketException e) {
             // WebSocketException, also look into WebSocketListener!!!
             if (e.getMessage().contains("101")){
@@ -60,12 +62,6 @@ public class SpeedAI {
     }
 
     public static void handleMessage(WebSocket websocket, String message) {
-        // Just print out message if its not a Json
-        if(!isJson(message)){
-            LOGGER.log(Level.INFO, "Server >> " + message);
-            return;
-        }
-
         // New Gson Object
         Gson gson = new Gson();
 
@@ -88,28 +84,13 @@ public class SpeedAI {
         }
 
         if(!action_changed){
+            // TODO notify synchronized thread
             LOGGER.log(Level.WARNING, "No action delivered in time by scoring system!");
         }
 
         String actionJson = gson.toJson(nextAction);
         websocket.sendText(actionJson);
     }
-
-
-    // Check if a given string is in json format
-    public static boolean isJson(String Json) {
-        try {
-            new JSONObject(Json);
-        } catch (JSONException ex) {
-            try {
-                new JSONArray(Json);
-            } catch (JSONException ex1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     // Clean Shutdown
     public static void shutdown(int status){

@@ -1,15 +1,16 @@
 import java.util.Date;
+import java.util.Map;
 
 public class GameStatus {
-    private int width = 40;
-    private int height = 40;
-    private int[][] cells;
+    public int width = 40;
+    public int height = 40;
+    public int[][] cells;
 
-    private Player[] players;
+    public Map<String, Player> players;
 
-    private int you = 0;
-    private boolean runnning = false;
-    private Date deadline;
+    public int you = 0;
+    public boolean running = false;
+    public Date deadline;
 
 
     public String getMap(){
