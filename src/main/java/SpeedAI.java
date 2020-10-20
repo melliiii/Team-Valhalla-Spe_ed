@@ -31,8 +31,8 @@ public class SpeedAI {
 
     static WebSocket websocket;
     static GameStatus gameStatus;
-    static Action nextAction = Action.change_nothing;
-    static boolean action_changed = false;
+    public static GameMove nextGameMove = GameMove.change_nothing;
+    public static boolean gameMove_changed = false;
 
 
     public static void main(String[] args) {
@@ -62,9 +62,9 @@ public class SpeedAI {
         Gson gson = new Gson();
 
         // Parse json string to GameStatus object
-        try{
+        try {
             gameStatus = gson.fromJson(message, GameStatus.class);
-        }catch (JsonSyntaxException e){
+        } catch (JsonSyntaxException e){
             // message is not a GameStatus Object
             LOGGER.log(Level.INFO, "Server >> " + message);
             return;
@@ -75,8 +75,8 @@ public class SpeedAI {
 
 
         // Reset Action
-        nextAction = Action.change_nothing;
-        action_changed = false;
+        nextGameMove = GameMove.change_nothing;
+        gameMove_changed = false;
 
         // TODO: Decide on which move to do
         // in synchronized thread
@@ -85,22 +85,22 @@ public class SpeedAI {
         try {
             long timeMillisLeft =  gameStatus.getDeadline().getTime() - System.currentTimeMillis();
             while(timeMillisLeft >= expected_ping){
-                Thread.sleep(timeMillisLeft / 2);
+                Thread.sleep(timeMillisLeft / 4);
                 timeMillisLeft =  gameStatus.getDeadline().getTime() - System.currentTimeMillis();
-                if(action_changed) break; // Skip if action got selected
+                if(gameMove_changed) break; // break if action got selected
             }
         } catch (InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         }
 
         // if action wasnt changed make a log entry
-        if(!action_changed){
+        if(!gameMove_changed){
             // TODO notify synchronized thread
-            LOGGER.log(Level.WARNING, "No action delivered in time by scoring system!");
+            LOGGER.log(Level.WARNING, "No game move delivered in time by scoring system!");
         }
 
         // Parse actions as JSON and send it to server
-        String actionJson = gson.toJson(nextAction);
+        String actionJson = gson.toJson(nextGameMove);
         websocket.sendText(actionJson);
     }
 
