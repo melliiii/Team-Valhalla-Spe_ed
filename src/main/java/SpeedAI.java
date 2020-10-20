@@ -31,7 +31,6 @@ public class SpeedAI {
         }
     }
 
-
     static WebSocket websocket;
     static GameStatus gameStatus;
     static Action nextAction = Action.change_nothing;
@@ -39,7 +38,6 @@ public class SpeedAI {
 
 
     public static void main(String[] args) {
-
         try {
             // Create Websocket and connect
             websocket = new WebSocketFactory()
@@ -71,23 +69,33 @@ public class SpeedAI {
         // Print Map TODO Maybe Graphical Map on Endpoint?
         // System.out.println(gameStatus.getMap());
 
+
+        // Reset Action
         nextAction = Action.change_nothing;
         action_changed = false;
 
         // TODO: Decide on which move to do
         // in synchronized thread
 
+        // Wait for Action
         try {
-            Thread.sleep(gameStatus.getDeadline().getTime() - System.currentTimeMillis() - expected_ping);
+            long timeMillisLeft =  gameStatus.getDeadline().getTime() - System.currentTimeMillis();
+            while(timeMillisLeft >= expected_ping){
+                Thread.sleep(timeMillisLeft / 2);
+                timeMillisLeft =  gameStatus.getDeadline().getTime() - System.currentTimeMillis();
+                if(action_changed) break; // Skip if action got selected
+            }
         } catch (InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
         }
 
+        // if action wasnt changed make a log entry
         if(!action_changed){
             // TODO notify synchronized thread
             LOGGER.log(Level.WARNING, "No action delivered in time by scoring system!");
         }
 
+        // Parse actions as JSON and send it to server
         String actionJson = gson.toJson(nextAction);
         websocket.sendText(actionJson);
     }
@@ -95,6 +103,7 @@ public class SpeedAI {
     // Clean Shutdown
     public static void shutdown(int status){
         if(websocket != null){
+            // If Websocket is still connected, disconnect and destroy object
             websocket.disconnect();
             websocket = null;
         }

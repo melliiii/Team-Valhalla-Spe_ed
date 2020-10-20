@@ -29,11 +29,14 @@ public class WebSocketListener extends WebSocketAdapter {
 
     @Override
     public void onTextMessage(WebSocket websocket, String message) {
+        // fired when a text is received
+        // lets just pass that on to the main class
         SpeedAI.handleMessage(websocket, message);
     }
 
     @Override
-    public void onConnectError(WebSocket websocket, WebSocketException exception) throws WebSocketException {
+    public void onError(WebSocket websocket, WebSocketException exception) throws WebSocketException {
+        // Error handling on websocket
         if (exception.getMessage().contains("427")) {
             LOGGER.log(Level.SEVERE, "Already connected");
             SpeedAI.shutdown(427);
@@ -44,6 +47,6 @@ public class WebSocketListener extends WebSocketAdapter {
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) {
-        // TODO Handle Connect
+        // TODO Handle Connect??? MAYBE??? Works either way so prob. not :P
     }
 }
