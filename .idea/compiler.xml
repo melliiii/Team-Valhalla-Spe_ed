@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="spe_ed_AI" />
         <module name="SpeedWebsocketTest" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spe_ed_AI" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>

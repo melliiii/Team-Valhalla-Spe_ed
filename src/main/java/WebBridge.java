@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class SpeedAI {
+public class WebBridge {
     // WSS Information TODO: Move to config file
     private final static String url = "wss://msoll.de/spe_ed?key=123abc";
     private final static int expected_ping = 60;
@@ -18,11 +18,11 @@ public class SpeedAI {
     // Initialize Logger
     private static Logger LOGGER = null;
     static {
-        InputStream stream = SpeedAI.class.getClassLoader().
+        InputStream stream = WebBridge.class.getClassLoader().
                 getResourceAsStream("logging.properties");
         try {
             LogManager.getLogManager().readConfiguration(stream);
-            LOGGER= Logger.getLogger(SpeedAI.class.getName());
+            LOGGER= Logger.getLogger(WebBridge.class.getName());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,12 +30,12 @@ public class SpeedAI {
     }
 
     static WebSocket websocket;
-    static GameStatus gameStatus;
+    static GameState gameState;
     public static GameMove nextGameMove = GameMove.change_nothing;
     public static boolean gameMove_changed = false;
 
 
-    public static void main(String[] args) {
+    public static void run() {
         try {
             // Create Websocket and connect
             websocket = new WebSocketFactory()
@@ -45,12 +45,12 @@ public class SpeedAI {
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
-            SpeedAI.shutdown(1);
+            WebBridge.shutdown(1);
         } catch (WebSocketException e) {
             // WebSocketException, also look into WebSocketListener!!!
             if (e.getMessage().contains("101")){
                 LOGGER.log(Level.SEVERE, "Cannot connect to Server!");
-                SpeedAI.shutdown(101);
+                WebBridge.shutdown(101);
             }
             LOGGER.log(Level.SEVERE, e.getMessage());
             shutdown(1);
@@ -63,7 +63,7 @@ public class SpeedAI {
 
         // Parse json string to GameStatus object
         try {
-            gameStatus = gson.fromJson(message, GameStatus.class);
+            gameState = gson.fromJson(message, GameState.class);
         } catch (JsonSyntaxException e){
             // message is not a GameStatus Object
             LOGGER.log(Level.INFO, "Server >> " + message);
@@ -83,10 +83,10 @@ public class SpeedAI {
 
         // Wait for Action
         try {
-            long timeMillisLeft =  gameStatus.getDeadline().getTime() - System.currentTimeMillis();
+            long timeMillisLeft =  gameState.getDeadline().getTime() - System.currentTimeMillis();
             while(timeMillisLeft >= expected_ping){
                 Thread.sleep(timeMillisLeft / 4);
-                timeMillisLeft =  gameStatus.getDeadline().getTime() - System.currentTimeMillis();
+                timeMillisLeft =  gameState.getDeadline().getTime() - System.currentTimeMillis();
                 if(gameMove_changed) break; // break if action got selected
             }
         } catch (InterruptedException e) {

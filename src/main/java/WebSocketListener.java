@@ -15,11 +15,11 @@ public class WebSocketListener extends WebSocketAdapter {
     // Initialize Logger
     private static Logger LOGGER = null;
     static {
-        InputStream stream = SpeedAI.class.getClassLoader().
+        InputStream stream = WebBridge.class.getClassLoader().
                 getResourceAsStream("logging.properties");
         try {
             LogManager.getLogManager().readConfiguration(stream);
-            LOGGER= Logger.getLogger(SpeedAI.class.getName());
+            LOGGER= Logger.getLogger(WebBridge.class.getName());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -31,7 +31,7 @@ public class WebSocketListener extends WebSocketAdapter {
     public void onTextMessage(WebSocket websocket, String message) {
         // fired when a text is received
         // lets just pass that on to the main class
-        SpeedAI.handleMessage(websocket, message);
+        WebBridge.handleMessage(websocket, message);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class WebSocketListener extends WebSocketAdapter {
         // Error handling on websocket
         if (exception.getMessage().contains("427")) {
             LOGGER.log(Level.SEVERE, "Already connected");
-            SpeedAI.shutdown(427);
+            WebBridge.shutdown(427);
         } else {
             throw exception;
         }
