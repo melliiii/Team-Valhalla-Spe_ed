@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Game
+public class Game implements Cloneable
 {
     private GameState state;
     private List<Player> players;
@@ -72,7 +72,7 @@ public class Game
         Game result = clone();
 
         if (moves.size() != players.size()) {
-            // Moves and player count dont match up
+            // Moves and player count don't match up
             // Return nothing
             // TODO: Exception?
             return null;
@@ -171,6 +171,10 @@ public class Game
                 {
                     getCells()[p.getY()][p.getX()] = i+1;
                 }
+            }
+            if (p.isActive())
+            {
+                p.setScore(ticks);
             }
         }
     }

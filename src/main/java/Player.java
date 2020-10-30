@@ -1,6 +1,7 @@
-public class Player
+public class Player implements Cloneable
 {
     private PlayerState state;
+    private int score = 0;
 
     public PlayerState getState() {
         return state;
@@ -62,6 +63,7 @@ public class Player
         state.name = name;
     }
 
+    @Override
     public Player clone()
     {
         PlayerState s = new PlayerState();
@@ -73,11 +75,20 @@ public class Player
         result.setSpeed(getSpeed());
         result.setX(getX());
         result.setY(getY());
+        result.setScore(getScore());
         return result;
     }
 
     public Player(PlayerState state)
     {
         this.state = state;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
