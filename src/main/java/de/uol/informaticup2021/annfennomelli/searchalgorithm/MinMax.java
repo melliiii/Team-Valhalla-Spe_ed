@@ -42,6 +42,7 @@ public class MinMax {
                 // If the "worst that could happen" after ourMove is better than
                 // what we have been able to find so far, we have found a new candidate move
                 bestCandidateMove = ourMove;
+                max = min;
             }
         }
         return bestCandidateMove;
