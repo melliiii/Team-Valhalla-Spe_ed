@@ -52,12 +52,19 @@ public class MinMax {
      * Spieler wäre
      */
     public static int evaluate(GameState state, PlayerState ourPlayerState) {
-        if (!ourPlayerState.active) {
-            return Integer.MIN_VALUE; // Wir wollen auf keinen Fall sterben
-        }
-        return deadPlayersScore(state, ourPlayerState);
+        return weAreDeadScore(state, ourPlayerState) + deadPlayersScore(state, ourPlayerState);
     }
 
+    /**
+     * @return Integer.MIN_VALUE wenn unser Spieler tot ist, sonst 0
+     */
+    public static int weAreDeadScore(GameState state, PlayerState ourPlayerState) {
+        if (!ourPlayerState.active) {
+            return Integer.MIN_VALUE;
+        } else {
+            return 0;
+        }
+    }
     /**
      * @return 1 Punkt für jeden anderen Spieler, der tot ist
      */
