@@ -1,3 +1,5 @@
+package de.uol.informaticup2021.annfennomelli;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -83,7 +85,7 @@ public class Stage
 
         Game game = Game.create(40, 40, names);
 
-        System.out.println("Stage!");
+        System.out.println("de.uol.informaticup2021.annfennomelli.Stage!");
         for (int t = 0; t < 30; ++t)
         {
             scanner.nextLine();

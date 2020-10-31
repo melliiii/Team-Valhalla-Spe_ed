@@ -1,3 +1,5 @@
+package de.uol.informaticup2021.annfennomelli;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.neovisionaries.ws.client.WebSocket;
@@ -47,7 +49,7 @@ public class WebBridge {
             LOGGER.log(Level.SEVERE, e.getMessage());
             WebBridge.shutdown(1);
         } catch (WebSocketException e) {
-            // WebSocketException, also look into WebSocketListener!!!
+            // WebSocketException, also look into de.uol.informaticup2021.annfennomelli.WebSocketListener!!!
             if (e.getMessage().contains("101")){
                 LOGGER.log(Level.SEVERE, "Cannot connect to Server!");
                 WebBridge.shutdown(101);

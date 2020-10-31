@@ -1,3 +1,5 @@
+package de.uol.informaticup2021.annfennomelli;
+
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;

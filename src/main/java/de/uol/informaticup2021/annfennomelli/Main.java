@@ -1,3 +1,5 @@
+package de.uol.informaticup2021.annfennomelli;
+
 public class Main
 {
     public static void main(String[] args)
