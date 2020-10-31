@@ -49,7 +49,7 @@ public class WebBridge {
             LOGGER.log(Level.SEVERE, e.getMessage());
             WebBridge.shutdown(1);
         } catch (WebSocketException e) {
-            // WebSocketException, also look into de.uol.informaticup2021.annfennomelli.WebSocketListener!!!
+            // WebSocketException, also look into WebSocketListener!!!
             if (e.getMessage().contains("101")){
                 LOGGER.log(Level.SEVERE, "Cannot connect to Server!");
                 WebBridge.shutdown(101);

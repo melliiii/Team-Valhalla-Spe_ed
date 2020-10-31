@@ -50,7 +50,7 @@ public class Game implements Cloneable
         return new Game(s, 0);
     }
 
-    // Creates a deep clone of this de.uol.informaticup2021.annfennomelli.Game
+    // Creates a deep clone of this Game
     public Game clone()
     {
         GameState s = new GameState();
@@ -69,7 +69,7 @@ public class Game implements Cloneable
         return new Game(s, ticks);
     }
 
-    // Perform a move for every player. Returns a new de.uol.informaticup2021.annfennomelli.Game (deep copy)
+    // Perform a move for every player. Returns a new Game (deep copy)
     public Game variant(List<GameMove> moves) {
         Game result = clone();
 
@@ -190,7 +190,7 @@ public class Game implements Cloneable
         return state;
     }
 
-    // Sets the de.uol.informaticup2021.annfennomelli.GameState and maps the players to int index
+    // Sets the GameState and maps the players to int index
     // Maybe trivial but useful in the future
     public void setState(GameState state) {
         this.state = state;
