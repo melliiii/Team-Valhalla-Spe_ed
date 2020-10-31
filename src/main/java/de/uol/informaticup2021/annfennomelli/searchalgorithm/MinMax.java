@@ -5,7 +5,8 @@ import de.uol.informaticup2021.annfennomelli.GameState;
 import de.uol.informaticup2021.annfennomelli.PlayerState;
 
 public class MinMax {
-    public static GameMove calculateNextMove(GameState state, PlayerState ourPlayerState) {
+    public static GameMove calculateNextMove(GameState state) {
+        PlayerState ourPlayerState = state.players.get(Integer.toString(state.you));
         return GameMove.change_nothing;
     }
 
