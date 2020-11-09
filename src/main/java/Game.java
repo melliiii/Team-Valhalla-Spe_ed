@@ -5,6 +5,7 @@ public class Game implements Cloneable
     private GameState state;
     private List<Player> players;
     private int ticks;
+    private static Random random = new Random();
 
     public Game(GameState s, int ticks)
     {
@@ -14,7 +15,7 @@ public class Game implements Cloneable
 
     public static Game create(int width, int height, List<String> playerNames)
     {
-        Random rand = new Random();
+        Random rand = random;
         GameState s = new GameState();
         s.cells = new int[height][width];
 
@@ -33,13 +34,13 @@ public class Game implements Cloneable
         for (int i = 0; i < playerNames.size(); ++i)
         {
             PlayerState ps = new PlayerState();
-            ps.x = rand.nextInt() % width;
-            ps.y = rand.nextInt() % height;
+            ps.x = 1 + rand.nextInt(width-2);
+            ps.y = 1 + rand.nextInt(height-2);
             ps.speed = 1;
             ps.ID = i+1;
             ps.active = true;
             ps.name = playerNames.get(i);
-            ps.direction = int2Direction(rand.nextInt() % 4);
+            ps.direction = int2Direction(rand.nextInt(4));
             Player p = new Player(ps);
             s.players.put(String.valueOf(ps.ID), p.clone().getState());
         }
@@ -136,12 +137,12 @@ public class Game implements Cloneable
                 int[] delta = direction2Delta(p.getDirection());
                 p.getState().x += delta[0];
                 p.getState().y += delta[1];
-                if(p.getX() < 0 || p.getX() > state.width)
+                if(p.getX() < 0 || p.getX() >= state.width)
                 {
                     killPlayer(i);
                     break;
                 }
-                if(p.getY() < 0 || p.getY() > state.height)
+                if(p.getY() < 0 || p.getY() >= state.height)
                 {
                     killPlayer(i);
                     break;
@@ -195,7 +196,7 @@ public class Game implements Cloneable
         players = new ArrayList<Player>();
         for (int i = 0; i < state.players.size(); ++i)
         {
-            Player player = new Player(state.players.get(String.valueOf(i)));
+            Player player = new Player(state.players.get(String.valueOf(i+1)));
             players.add(player);
         }
     }

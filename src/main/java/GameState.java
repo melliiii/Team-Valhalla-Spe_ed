@@ -15,12 +15,21 @@ public class GameState {
     public String getMap(){
         String map = "";
         for (int[] row : cells) {
-            for (int i : row) {
-                map += i + " ";
-            }
-            map += "\n";
+            map += "||";
         }
-        return map;
+        map += "||||\n";
+        for (int[] row : cells) {
+            map += "||";
+            for (int i : row) {
+                map += (i == 0 ? " " : i == -1 ? "X" : i) + " ";
+            }
+            map += "||\n";
+        }
+        for (int[] row : cells) {
+            map += "||";
+        }
+        map += "||||";
+        return map + "\n";
     }
 
     public Date getDeadline() {

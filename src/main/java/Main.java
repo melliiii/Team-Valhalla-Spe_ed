@@ -10,7 +10,7 @@ public class Main
             }
             else if (args[0].contains("stage"))
             {
-                Stage.run();
+                Stage.loop();
             }
             else if (args[0].contains("trainer"))
             {
