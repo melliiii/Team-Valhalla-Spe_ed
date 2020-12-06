@@ -1,6 +1,7 @@
 import jneat.Population;
 
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +16,7 @@ public class Trainer
     private int iterations;
     private int evaluationSteps;
     private int inputCount;
+
 
     public boolean GUI_MODE = true;
 
@@ -32,7 +34,7 @@ public class Trainer
         inputCount = windowWidth*windowWidth + 3;// + player_count * 5;
 
         population = new Population(
-                50 /* population size */,
+                Neat.p_pop_size /* population size */,
                 inputCount /* network inputs */ ,
                 5 /* network outputs */,
                 30 /* max index of nodes */,
@@ -318,7 +320,8 @@ public class Trainer
             last_avg = avg;
             last_best = best;
 
-            System.out.println("\nIteration: " + i + "; current best: " + best + "; current avg: " + avg);
+            DecimalFormat df = new DecimalFormat("###.##");
+            System.out.println("\nIteration: " + i + "; current best: " + df.format(best) + "; current avg: " + df.format(avg));
 
             //if (dif > avg * 2 || i % 10 == 0)
             if(GUI_MODE)
