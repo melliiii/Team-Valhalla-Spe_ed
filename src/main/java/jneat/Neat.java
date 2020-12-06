@@ -187,7 +187,7 @@
 		 p_mate_singlepoint_prob = 0.25;
 		 p_mate_only_prob = 0.25;
 		 p_recur_only_prob = 0;
-		 p_pop_size = 30;
+		 p_pop_size = 50;
 		 p_dropoff_age = 1;
 		 p_newlink_tries = 10;
 		 p_print_every = 100;

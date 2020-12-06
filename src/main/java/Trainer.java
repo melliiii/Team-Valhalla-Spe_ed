@@ -30,10 +30,10 @@ public class Trainer
         inputCount = windowWidth*windowWidth + 3;// + player_count * 5;
 
         population = new Population(
-                30 /* population size */,
+                50 /* population size */,
                 inputCount /* network inputs */ ,
                 5 /* network outputs */,
-                50 /* max index of nodes */,
+                30 /* max index of nodes */,
                 true /* recurrent */,
                 0.5 /* probability of connecting two nodes */
         );
@@ -269,7 +269,7 @@ public class Trainer
                                 if (p == 0)
                                 {
                                     brain = ((Organism)neatOrgs.get(b)).getNet();
-                                    sum += 1; //game.getPlayer(p).getSpeed() * game.getDeaths();
+                                    sum += game.getDeaths(); // game.getPlayer(p).getSpeed()
                                 }
                                 else
                                 {
@@ -318,7 +318,7 @@ public class Trainer
 
             System.out.println("\nIteration: " + i + "; current best: " + best + "; current avg: " + avg);
 
-            if (dif > avg * 2 || i % 100 == 0)
+            //if (dif > avg * 2 || i % 10 == 0)
             {
                 population.print_to_file_by_species("SavedPopulation.txt");
 
@@ -330,7 +330,7 @@ public class Trainer
                 }
 
                 int width = 30;
-                if (i % 100 == 0)
+                if (i % 10 == 0)
                 {
                     width = 50;
                 }

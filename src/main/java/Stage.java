@@ -145,6 +145,9 @@ public class Stage extends JPanel implements KeyListener
         Color result = Color.BLACK;
         switch (cell)
         {
+            case 0:
+                result = Color.black;
+                break;
             case 1:
                 result =  Color.green;
                 break;
@@ -165,6 +168,10 @@ public class Stage extends JPanel implements KeyListener
                 break;
             case -1:
                 result =  Color.white;
+                break;
+            default:
+                Random r = new Random(cell);
+                result =  new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
                 break;
         }
 

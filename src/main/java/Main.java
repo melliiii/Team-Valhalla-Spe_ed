@@ -15,7 +15,7 @@ public class Main
             }
             else if (args[0].contains("trainer"))
             {
-                Trainer trainer = new Trainer(1, 3, 1000, 10);
+                Trainer trainer = new Trainer(5, 10, 1000, 10);
                 trainer.loop();
             }
         }
