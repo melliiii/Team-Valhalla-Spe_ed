@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import jneat.*;
 
 public class Stage extends JPanel implements KeyListener
 {
@@ -100,6 +101,23 @@ public class Stage extends JPanel implements KeyListener
         super();
         addKeyListener(this);
         setFocusable(true);
+
+        List<String> names = new ArrayList<String>();
+        names.add("Frodo");
+        names.add("Gandalf");
+        names.add("Sam");
+        names.add("Bilbo");
+        names.add("Aragorn");
+        names.add("Sauron");
+
+        Game game = Game.create(50, 50, names);
+        this.game = game;
+
+        JFrame frame = new JFrame("gui");
+        frame.add(this);
+        frame.setVisible(true);
+        frame.setSize(1200, 700);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public void paintComponent(Graphics g)
@@ -153,51 +171,40 @@ public class Stage extends JPanel implements KeyListener
         return result;
     }
 
-    public static void loop() {
-        Stage stage = new Stage();
-        List<String> names = new ArrayList<String>();
-        names.add("Frodo");
-        names.add("Gandalf");
-        names.add("Sam");
-        names.add("Bilbo");
-        names.add("Aragorn");
-        names.add("Sauron");
+    public Game getGame()
+    {
+        return game;
+    }
 
-        Game game = Game.create(50, 50, names);
-        stage.game = game;
+    public void setGame(Game game)
+    {
+        this.game = game;
+    }
 
-        JFrame frame = new JFrame("gui");
-        frame.add(stage);
-        frame.setVisible(true);
-        frame.setSize(1200, 700);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Stage!");
+    public void loop()
+    {
         for (int t = 0; t < 1000; ++t) {
-            //scanner.nextLine();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             List<GameMove> moves = new ArrayList<GameMove>();
-            for (int i = 0; i < names.size(); ++i) {
+            for (int i = 0; i < game.getPlayerCount(); ++i) {
                 GameMove move = testAI(game, game.getPlayer(i));
                 moves.add(move);
             }
             game.tick(moves);
             System.out.println(game.getState().getMap());
 
-            for (int i = 0; i < names.size(); ++i) {
+            for (int i = 0; i < game.getPlayerCount(); ++i) {
                 if (game.getPlayer(i).isActive()) {
                     System.out.print(" " + String.valueOf(i + 1));
                 }
             }
 
-            stage.game = game;
-            stage.repaint();
+            this.game = game;
+            this.repaint();
         }
     }
 

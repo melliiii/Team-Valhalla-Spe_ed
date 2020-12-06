@@ -6,6 +6,7 @@ public class Game implements Cloneable
     private List<Player> players;
     private int ticks;
     private static Random random = new Random();
+    private List<Integer> deaths = new ArrayList<Integer>();
 
     public Game(GameState s, int ticks)
     {
@@ -121,12 +122,18 @@ public class Game implements Cloneable
             p.setDirection(int2Direction(num_dir));
         }
 
+        setRunning(false);
+
         // Move Players
         for(int i = 0; i < players.size(); ++i)
         {
             Player p = players.get(i);
 
             // Legal state
+            if (p.getSpeed() == 0)
+            {
+                killPlayer(i);
+            }
             for (int m = 0; m < p.getSpeed(); ++m)
             {
                 if(!p.isActive())
@@ -176,17 +183,36 @@ public class Game implements Cloneable
             if (p.isActive())
             {
                 p.setScore(ticks);
+                setRunning(true);
             }
         }
     }
 
     public void killPlayer(int playerId)
     {
+        if (!deaths.contains(playerId))
+        {
+            deaths.add(playerId);
+        }
         players.get(playerId).setActive(false);
+    }
+
+    public int getDeath(int playerId)
+    {
+        return deaths.indexOf(playerId);
+    }
+
+    public int getDeaths(){
+        return deaths.size();
     }
 
     public GameState getState() {
         return state;
+    }
+
+    public int getTicks()
+    {
+        return ticks;
     }
 
     // Sets the GameState and maps the players to int index
@@ -271,6 +297,11 @@ public class Game implements Cloneable
     public Player getPlayer(int id)
     {
         return players.get(id);
+    }
+
+    public int getPlayerCount()
+    {
+        return players.size();
     }
 
     public int getYou() {
