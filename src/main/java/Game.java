@@ -76,15 +76,13 @@ public class Game implements Cloneable
         if (moves.size() != players.size()) {
             // Moves and player count don't match up
             // Return nothing
-            // TODO: Exception?
             throw new Exception("Player Moves dont match!");
         }
 
         if (!state.running)
         {
             // Return nothing
-            // TODO: Exception?
-            return null;
+            throw new Exception("State is not running.");
         }
 
         result.tick(moves);
