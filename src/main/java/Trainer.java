@@ -1,21 +1,22 @@
 import jneat.Population;
-
-import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import jneat.*;
 
+@SuppressWarnings("rawtypes")
 public class Trainer
 {
-    private Population population;
-    private int windowRadius;
-    private int player_count;
-    private int iterations;
-    private int evaluationSteps;
-    private int inputCount;
+    private final Population population;
+    private final int windowRadius;
+    private final int player_count;
+    private final int iterations;
+    private final int evaluationSteps;
+    private final int inputCount;
 
 
     public boolean GUI_MODE = true;
@@ -183,7 +184,7 @@ public class Trainer
 
     public GameMove getBrainDecision(Network brain, Player player, Game game)
     {
-        double inputs[] = generateInputs(game, player);
+        double[] inputs = generateInputs(game, player);
 
         // Load these inputs into the neural network.
         brain.load_sensors(inputs);
@@ -217,12 +218,11 @@ public class Trainer
         // Main loop iterations
         // i is the current iteration
         double last_avg = 0;
-        double last_best = 0;
         for (int i = 0; i < iterations; ++i)
         {
             Vector neatOrgs = population.getOrganisms();
             int brainCount = neatOrgs.size();
-            double fitness[] = new double[brainCount];
+            double[] fitness = new double[brainCount];
             double avg = 0;
             for (int b = 0; b < brainCount; ++b)
             {
@@ -251,7 +251,7 @@ public class Trainer
                     }
 
                     // Create game
-                    List<String> names = new ArrayList<String>();
+                    List<String> names = new ArrayList<>();
                     for (int p = 0; p < player_count; ++p)
                     {
                         names.add("Player " + p);
@@ -261,7 +261,7 @@ public class Trainer
                     // Evaluation until game finishes
                     while(game.isRunning())
                     {
-                        List<GameMove> moves = new ArrayList<GameMove>();
+                        List<GameMove> moves = new ArrayList<>();
                         // p is the current player
                         for (int p = 0; p < player_count; ++p)
                         {
@@ -316,9 +316,8 @@ public class Trainer
                 ((Organism)neatOrgs.get(b)).setFitness(fitness[b]);
             }
 
-            double dif = best-last_best;
+
             last_avg = avg;
-            last_best = best;
 
             DecimalFormat df = new DecimalFormat("###.##");
             System.out.println("\nIteration: " + i + "; current best: " + df.format(best) + "; current avg: " + df.format(avg));
@@ -329,7 +328,7 @@ public class Trainer
                 population.print_to_file_by_species("SavedPopulation.txt");
 
                 Stage stage = new Stage();
-                List<String> names = new ArrayList<String>();
+                List<String> names = new ArrayList<>();
                 for (int p = 0; p < player_count; ++p)
                 {
                     names.add("Player " + p);
@@ -346,7 +345,7 @@ public class Trainer
 
                 while (game.isRunning())
                 {
-                    List<GameMove> moves = new ArrayList<GameMove>();
+                    List<GameMove> moves = new ArrayList<>();
                     // p is the current player
                     for (int p = 0; p < player_count; ++p)
                     {
@@ -376,11 +375,7 @@ public class Trainer
                     if (stage.isDisplayable())
                     {
                         stage.repaint();
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        Executors.newSingleThreadScheduledExecutor().schedule(() -> null, 100, TimeUnit.MILLISECONDS);
                     }
                 }
             }

@@ -5,8 +5,8 @@ public class Game implements Cloneable
     private GameState state;
     private List<Player> players;
     private int ticks;
-    private static Random random = new Random();
-    private List<Integer> deaths = new ArrayList<Integer>();
+    private static final Random random = new Random();
+    private final List<Integer> deaths = new ArrayList<>();
 
     public Game(GameState s, int ticks)
     {
@@ -31,7 +31,7 @@ public class Game implements Cloneable
         s.deadline = new Date();
         s.height = height;
         s.width = width;
-        s.players = new HashMap<String, PlayerState>();
+        s.players = new HashMap<>();
         for (int i = 0; i < playerNames.size(); ++i)
         {
             PlayerState ps = new PlayerState();
@@ -51,14 +51,14 @@ public class Game implements Cloneable
     }
 
     // Creates a deep clone of this Game
-    public Game clone()
+    public Game cloneGame()
     {
         GameState s = new GameState();
         s.cells = state.cells.clone();
         s.deadline = state.deadline;
         s.height = state.height;
         s.width = state.width;
-        s.players = new HashMap<String, PlayerState>();
+        s.players = new HashMap<>();
         for (Map.Entry<String, PlayerState> entry : state.players.entrySet())
         {
             Player p = new Player(entry.getValue());
@@ -70,14 +70,14 @@ public class Game implements Cloneable
     }
 
     // Perform a move for every player. Returns a new Game (deep copy)
-    public Game variant(List<GameMove> moves) {
-        Game result = clone();
+    public Game variant(List<GameMove> moves) throws Exception {
+        Game result = cloneGame();
 
         if (moves.size() != players.size()) {
             // Moves and player count don't match up
             // Return nothing
             // TODO: Exception?
-            return null;
+            throw new Exception("Player Moves dont match!");
         }
 
         if (!state.running)
@@ -219,7 +219,7 @@ public class Game implements Cloneable
     // Maybe trivial but useful in the future
     public void setState(GameState state) {
         this.state = state;
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         for (int i = 0; i < state.players.size(); ++i)
         {
             Player player = new Player(state.players.get(String.valueOf(i+1)));

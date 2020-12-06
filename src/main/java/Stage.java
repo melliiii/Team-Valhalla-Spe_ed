@@ -1,13 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
-import jneat.*;
 
 public class Stage extends JPanel implements KeyListener
 {
@@ -102,7 +99,7 @@ public class Stage extends JPanel implements KeyListener
         addKeyListener(this);
         setFocusable(true);
 
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         names.add("Frodo");
         names.add("Gandalf");
         names.add("Sam");
@@ -110,8 +107,7 @@ public class Stage extends JPanel implements KeyListener
         names.add("Aragorn");
         names.add("Sauron");
 
-        Game game = Game.create(50, 50, names);
-        this.game = game;
+        this.game = Game.create(50, 50, names);
 
         JFrame frame = new JFrame("gui");
         frame.add(this);
@@ -142,7 +138,7 @@ public class Stage extends JPanel implements KeyListener
 
     public static Color cell2Color(int cell)
     {
-        Color result = Color.BLACK;
+        Color result;
         switch (cell)
         {
             case 0:
@@ -196,7 +192,7 @@ public class Stage extends JPanel implements KeyListener
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            List<GameMove> moves = new ArrayList<GameMove>();
+            List<GameMove> moves = new ArrayList<>();
             for (int i = 0; i < game.getPlayerCount(); ++i) {
                 GameMove move = testAI(game, game.getPlayer(i));
                 moves.add(move);
@@ -206,11 +202,11 @@ public class Stage extends JPanel implements KeyListener
 
             for (int i = 0; i < game.getPlayerCount(); ++i) {
                 if (game.getPlayer(i).isActive()) {
-                    System.out.print(" " + String.valueOf(i + 1));
+                    System.out.print(" " + (i + 1));
                 }
             }
 
-            this.game = game;
+            //this.game = game; TODO What do you wanna do here? (unnecessary expression as "this.game" and "game" are the same variable!!!)
             this.repaint();
         }
     }
