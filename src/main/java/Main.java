@@ -15,7 +15,13 @@ public class Main
             }
             else if (args[0].contains("trainer"))
             {
+
                 Trainer trainer = new Trainer(5, 10, 1000, 10);
+                if(args.length >= 2){
+                    if(args[1].equalsIgnoreCase("nogui")){
+                        trainer.GUI_MODE = false;
+                    }
+                }
                 trainer.loop();
             }
         }

@@ -16,6 +16,8 @@ public class Trainer
     private int evaluationSteps;
     private int inputCount;
 
+    public boolean GUI_MODE = true;
+
     public Trainer(int windowRadius, int player_count, int iterations, int evaluationSteps)
     {
         Neat.initbase();
@@ -227,7 +229,7 @@ public class Trainer
 
             int currentProg = 0;
 
-            System.out.println("");
+            System.out.println();
 
             // Evaluate all brains
             for (int b = 0; b < brainCount; ++b)
@@ -250,7 +252,7 @@ public class Trainer
                     List<String> names = new ArrayList<String>();
                     for (int p = 0; p < player_count; ++p)
                     {
-                        names.add("Player " + String.valueOf(p));
+                        names.add("Player " + p);
                     }
                     Game game = Game.create(30, 30, names);
 
@@ -264,8 +266,8 @@ public class Trainer
                             // Dead players dont move
                             if (game.getPlayer(p).isActive())
                             {
-                                Network brain = null;
-                                GameMove move = null;
+                                Network brain;
+                                GameMove move;
                                 if (p == 0)
                                 {
                                     brain = ((Organism)neatOrgs.get(b)).getNet();
@@ -290,7 +292,7 @@ public class Trainer
                     //fitness[b] += sum; //Math.min(fitness[b], sum);
                     //sum = 0;
                 }
-                fitness[b] = sum / evaluationSteps;
+                fitness[b] = (float) sum / evaluationSteps;
                 //fitness[b] /= evaluationSteps;
                 avg += fitness[b];
             }
@@ -319,6 +321,7 @@ public class Trainer
             System.out.println("\nIteration: " + i + "; current best: " + best + "; current avg: " + avg);
 
             //if (dif > avg * 2 || i % 10 == 0)
+            if(GUI_MODE)
             {
                 population.print_to_file_by_species("SavedPopulation.txt");
 
@@ -326,7 +329,7 @@ public class Trainer
                 List<String> names = new ArrayList<String>();
                 for (int p = 0; p < player_count; ++p)
                 {
-                    names.add("Player " + String.valueOf(p));
+                    names.add("Player " + p);
                 }
 
                 int width = 30;
@@ -347,8 +350,8 @@ public class Trainer
                         // Dead players dont move
                         if (game.getPlayer(p).isActive())
                         {
-                            Network brain = null;
-                            GameMove move = null;
+                            Network brain;
+                            GameMove move;
                             if (p == 0)
                             {
                                 brain = ((Organism)neatOrgs.get(bestbrain)).getNet();
