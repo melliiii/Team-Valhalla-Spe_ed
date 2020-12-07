@@ -13,22 +13,22 @@ public class GameState {
     public Date deadline;
 
     public String getMap(){
-        String map = "";
-        for (int[] row : cells) {
-            map += "||";
+        StringBuilder map = new StringBuilder();
+        for (int[] ignored : cells) {
+            map.append("||");
         }
-        map += "||||\n";
+        map.append("||||\n");
         for (int[] row : cells) {
-            map += "||";
+            map.append("||");
             for (int i : row) {
-                map += (i == 0 ? " " : i == -1 ? "X" : i) + " ";
+                map.append(i == 0 ? " " : i == -1 ? "X" : String.valueOf(i)).append(" ");
             }
-            map += "||\n";
+            map.append("||\n");
         }
-        for (int[] row : cells) {
-            map += "||";
+        for (int[] ignored : cells) {
+            map.append("||");
         }
-        map += "||||";
+        map.append("||||");
         return map + "\n";
     }
 
