@@ -36,9 +36,9 @@ public class Trainer
                 Neat.p_pop_size /* population size */,
                 inputCount /* network inputs */ ,
                 5 /* network outputs */,
-                30 /* max index of nodes */,
+                40 /* max index of nodes */,
                 true /* recurrent */,
-                0.5 /* probability of connecting two nodes */
+                0.24 /* probability of connecting two nodes */
         );
 
     }
@@ -321,36 +321,30 @@ public class Trainer
             System.out.println("\nIteration: " + current_iteration + "; current best: " + df.format(best) + "; current avg: " + df.format(avg));
 
             //if (dif > avg * 2 || i % 10 == 0)
-            if(GUI_MODE)
-            {
                 population.print_to_file_by_species("SavedPopulation.txt");
 
-                Stage stage = new Stage("Iteration: " + current_iteration);
+                if(GUI_MODE && current_iteration % 10 == 0) {
+                Stage stage = new Stage("Iteration: " + current_iteration, true);
 
                 List<String> names = new ArrayList<>();
-                for (int p = 0; p < player_count; ++p)
-                {
+                for (int p = 0; p < player_count; ++p) {
                     names.add("Player " + p);
                 }
 
                 int width = 30;
-                if (current_iteration % 10 == 0)
-                {
-                    width = 50;
-                }
+                //if (current_iteration % 10 == 0) {
+                    width = 40;
+                //}*/
 
                 Game game = Game.create(width, width, names);
                 stage.setGame(game);
 
-                while (game.isRunning())
-                {
+                while (game.isRunning()) {
                     List<GameMove> moves = new ArrayList<>();
                     // p is the current player
-                    for (int p = 0; p < player_count; ++p)
-                    {
+                    for (int p = 0; p < player_count; ++p) {
                         // Dead players dont move
-                        if (game.getPlayer(p).isActive())
-                        {
+                        if (game.getPlayer(p).isActive()) {
                             Network brain;
                             GameMove move;
                             if (p == 0)

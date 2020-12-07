@@ -94,7 +94,7 @@ public class Stage extends JPanel implements KeyListener
         return result;
     }
 
-    public Stage(String title)
+    public Stage(String title, boolean minimized)
     {
         super();
         addKeyListener(this);
@@ -112,12 +112,12 @@ public class Stage extends JPanel implements KeyListener
 
         JFrame frame = new JFrame(title);
         frame.add(this);
-        frame.setState(Frame.ICONIFIED);
+        if (minimized) frame.setState(Frame.ICONIFIED);
         frame.setSize(1200, 700);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
     }
-    public Stage()
+    public Stage(boolean minimized)
     {
         super();
         addKeyListener(this);
@@ -135,7 +135,7 @@ public class Stage extends JPanel implements KeyListener
 
         JFrame frame = new JFrame("gui");
         frame.add(this);
-        frame.setState(Frame.ICONIFIED);
+        if (minimized) frame.setState(Frame.ICONIFIED);
         frame.setSize(1200, 700);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
