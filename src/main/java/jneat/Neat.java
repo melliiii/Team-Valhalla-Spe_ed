@@ -164,12 +164,12 @@
 	  }
 
 	public static void initbase() {
-		 p_trait_param_mut_prob = 0.25;
-		 p_trait_mutation_power = 0.25;
+		 p_trait_param_mut_prob = 0.5;
+		 p_trait_mutation_power = 0.1;
 		 p_linktrait_mut_sig = 0.25;
 		 p_nodetrait_mut_sig = 0.25;
-		 p_recur_prob = 0.1;
-		 p_weight_mut_power = 0.1;
+		 p_recur_prob = 0.15;
+		 p_weight_mut_power = 0.15;
 		 p_disjoint_coeff = 0.5;
 		 p_excess_coeff = 0.5;
 		 p_mutdiff_coeff = 0.5;
@@ -177,21 +177,21 @@
 		 p_age_significance = 0.25;
 		 p_survival_thresh = 90;
 		 p_mutate_only_prob = 0.5;
-		 p_mutate_random_trait_prob = 0.25;
-		 p_mutate_link_trait_prob = 0.25;
-		 p_mutate_node_trait_prob = 0.25;
+		 p_mutate_random_trait_prob = 0.6;
+		 p_mutate_link_trait_prob = 0.2;
+		 p_mutate_node_trait_prob = 0.2;
 		 p_mutate_link_weights_prob = 0.25;
 		 p_mutate_toggle_enable_prob = 0.25;
 		 p_mutate_gene_reenable_prob = 0.25;
-		 p_mutate_add_node_prob = 0.25;
-		 p_mutate_add_link_prob = 0.25;
-		 p_interspecies_mate_rate = 0.25;
-		 p_mate_multipoint_prob = 0.25;
+		 p_mutate_add_node_prob = 0.1;
+		 p_mutate_add_link_prob = 0.3;
+		 p_interspecies_mate_rate = 0.5;
+		 p_mate_multipoint_prob = 0.4;
 		 p_mate_multipoint_avg_prob = 0.25;
 		 p_mate_singlepoint_prob = 0.25;
 		 p_mate_only_prob = 0.25;
-		 p_recur_only_prob = 0;
-		 p_pop_size = 50;
+		 p_recur_only_prob = 0.05;
+		 p_pop_size = 24;
 		 p_dropoff_age = 1;
 		 p_newlink_tries = 10;
 		 p_print_every = 100;
