@@ -1,5 +1,6 @@
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class Game implements Cloneable
 {
     private GameState state;
