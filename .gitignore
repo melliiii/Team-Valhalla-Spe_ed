@@ -18,9 +18,9 @@ selenium-debug.log
 *.sln
 # IntelliJ module files
 *.iml
+*.txt
+SavedPopulation.txt
 
 # Generated files 
 target/
 out/
-
-SavedPopulation.txt
