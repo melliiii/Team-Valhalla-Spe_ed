@@ -22,3 +22,5 @@ selenium-debug.log
 # Generated files 
 target/
 out/
+
+SavedPopulation.txt
