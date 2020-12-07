@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import jneat.*;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings("SuspiciousNameCombination")
 public class Trainer
 {
     private final Population population;
@@ -220,7 +220,7 @@ public class Trainer
         double last_avg = 0;
         for (int i = 0; i < iterations; ++i)
         {
-            Vector neatOrgs = population.getOrganisms();
+            Vector<Organism> neatOrgs = population.getOrganisms();
             int brainCount = neatOrgs.size();
             double[] fitness = new double[brainCount];
             double avg = 0;
@@ -272,13 +272,13 @@ public class Trainer
                                 GameMove move;
                                 if (p == 0)
                                 {
-                                    brain = ((Organism)neatOrgs.get(b)).getNet();
+                                    brain = neatOrgs.get(b).getNet();
                                     sum += game.getDeaths(); // game.getPlayer(p).getSpeed()
                                 }
                                 else
                                 {
                                     int other = (b + p) % neatOrgs.size();
-                                    brain = ((Organism)neatOrgs.get(other)).getNet();
+                                    brain = neatOrgs.get(other).getNet();
                                 }
                                 move = getBrainDecision(brain, game.getPlayer(p), game);
                                 moves.add(move);
@@ -313,7 +313,7 @@ public class Trainer
                     best = fitness[b];
                 }
                 fitness[b] -= last_avg;
-                ((Organism)neatOrgs.get(b)).setFitness(fitness[b]);
+                neatOrgs.get(b).setFitness(fitness[b]);
             }
 
 
@@ -356,12 +356,12 @@ public class Trainer
                             GameMove move;
                             if (p == 0)
                             {
-                                brain = ((Organism)neatOrgs.get(bestbrain)).getNet();
+                                brain = neatOrgs.get(bestbrain).getNet();
                             }
                             else
                             {
                                 int other = (bestbrain + p) % neatOrgs.size();
-                                brain = ((Organism)neatOrgs.get(other)).getNet();
+                                brain = neatOrgs.get(other).getNet();
                             }
                             move = getBrainDecision(brain, game.getPlayer(p), game);
                             moves.add(move);

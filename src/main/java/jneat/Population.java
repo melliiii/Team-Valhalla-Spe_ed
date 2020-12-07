@@ -10,7 +10,7 @@
 /** A Population is a group of Organisms including their species */
 	public class Population extends Neat {
    /** The organisms in the Population */
-	  public Vector organisms;
+	  public Vector<Organism> organisms;
    
    /** Species in the Population the species should comprise all the genomes */
 	  public Vector species;
@@ -49,11 +49,11 @@
    /** If  too high, leads to delta coding process. */
 	  int highest_last_changed;
    
-	   public Vector getOrganisms() {
+	   public Vector<Organism> getOrganisms() {
 		 return organisms;
 	  }            
    
-	   public void setOrganisms(Vector organisms) {
+	   public void setOrganisms(Vector<Organism> organisms) {
 		 this.organisms = organisms;
 	  }            
    
@@ -166,7 +166,7 @@
 		 int count;
 		 Genome newgenome = null;
 		 Organism neworganism = null;
-		 organisms = new Vector(size);
+		 organisms = new Vector<>(size);
 		 for (count = 1; count <= size; count++) 
 		 {
 		 //	  System.out.print("\n Creating organism -> " + count);
@@ -1219,8 +1219,8 @@
 		 
 		 
 		 
-			StringBuffer tmp1 = new StringBuffer("");
-			StringBuffer tmp2 = new StringBuffer("");
+			StringBuffer tmp1 = new StringBuffer();
+			StringBuffer tmp2 = new StringBuffer();
 		 
 			int status = 0;
 		 
