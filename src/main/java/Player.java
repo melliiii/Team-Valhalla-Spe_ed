@@ -1,6 +1,6 @@
 public class Player implements Cloneable
 {
-    private PlayerState state;
+    private final PlayerState state;
     private int score = 0;
 
     public PlayerState getState() {
@@ -64,8 +64,7 @@ public class Player implements Cloneable
     }
 
     @Override
-    public Player clone()
-    {
+    public Player clone() {
         PlayerState s = new PlayerState();
         Player result = new Player(s);
         result.setActive(isActive());

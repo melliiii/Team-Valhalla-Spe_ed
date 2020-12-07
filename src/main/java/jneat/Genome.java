@@ -8,6 +8,7 @@
    import jNeatCommon.*;
 
 
+																@SuppressWarnings("ConstantConditions")
 																public class Genome extends Neat {
    
    /** Is a reference from this genotype to fenotype */
@@ -94,11 +95,8 @@
 		 Iterator itr_trait = traits.iterator();
 		 Iterator itr_node = nodes.iterator();
 		 Iterator itr_gene = genes.iterator();
-	  
-	  /**
-	  * duplicate trait
-	  */
-		 itr_trait = traits.iterator();
+
+		  itr_trait = traits.iterator();
 		 while (itr_trait.hasNext()) 
 		 {
 			Trait _trait = ((Trait) itr_trait.next());
@@ -107,12 +105,8 @@
 			traits_dup.add(newtrait);
 		 
 		 }
-	  
-	  /**
-	  * duplicate NNodes
-	  */
-	  
-		 itr_node = nodes.iterator();
+
+		  itr_node = nodes.iterator();
 		 while (itr_node.hasNext()) 
 		 {
 			NNode _node = ((NNode) itr_node.next());
@@ -140,12 +134,8 @@
 			_node.dup = newnode;
 			nodes_dup.add(newnode);
 		 }
-	  
-	  /**
-	  * duplicate Genes
-	  */
-	  
-		 itr_gene = genes.iterator();
+
+		  itr_gene = genes.iterator();
 		 while (itr_gene.hasNext()) {
 		 
 			Gene _gene = ((Gene) itr_gene.next());
@@ -213,14 +203,11 @@
 		 boolean severe; //Once in a while really shake things up
 	  
 	  // for 50% of Prob. // severe is true
-	  
-		 if (NeatRoutine.randfloat() > 0.5)
-			severe = true;
-		 else
-			severe = false;
+
+		  severe = NeatRoutine.randfloat() > 0.5;
 	  
 		 num = 0.0;
-		 gene_total = (double) genes.size();
+		 gene_total = genes.size();
 		 endpart = gene_total * 0.8;
 		 powermod = 1.0;
 	  
@@ -678,8 +665,7 @@
 	  
 		 if (nodes.size() >= 500) 
 		 {
-			disab = false;
-			itr_gene = genes.iterator();
+			 itr_gene = genes.iterator();
 			while (itr_gene.hasNext()) 
 			{
 			   Gene _gene = ((Gene) itr_gene.next());
@@ -693,11 +679,8 @@
 				  System.out.print("\n Gene is :");
 				  _gene.op_view();
 			   }
-			
-			   if (!_gene.enable)
-				  disab = true;
-			   else
-				  disab = false;
+
+				disab = !_gene.enable;
 			}
 		 }
 	  
@@ -898,23 +881,21 @@
 			while (itr_newgenes.hasNext()) 
 			{
 			   _curgene2 = ((Gene) itr_newgenes.next());
-			
-			   if (_curgene2.lnk.in_node.node_id == chosengene.lnk.in_node.node_id
-			   && _curgene2.lnk.out_node.node_id == chosengene.lnk.out_node.node_id
-			   && _curgene2.lnk.is_recurrent == chosengene.lnk.is_recurrent) 
-			   {
-				  skip = true;
-				  break;
-			   }	
-			   if (_curgene2.lnk.in_node.node_id == chosengene.lnk.out_node.node_id
-			   && _curgene2.lnk.out_node.node_id == chosengene.lnk.in_node.node_id
-			   && !_curgene2.lnk.is_recurrent
-			   && !chosengene.lnk.is_recurrent) 
-			   {
-				  skip = true;
-				  break;
-			   }
-			
+
+				if (chosengene != null && _curgene2.lnk.in_node.node_id == chosengene.lnk.in_node.node_id
+						&& _curgene2.lnk.out_node.node_id == chosengene.lnk.out_node.node_id
+						&& _curgene2.lnk.is_recurrent == chosengene.lnk.is_recurrent) {
+					skip = true;
+					break;
+				}
+				if (chosengene != null && _curgene2.lnk.in_node.node_id == chosengene.lnk.out_node.node_id
+						&& _curgene2.lnk.out_node.node_id == chosengene.lnk.in_node.node_id
+						&& !_curgene2.lnk.is_recurrent
+						&& !chosengene.lnk.is_recurrent) {
+					skip = true;
+					break;
+				}
+
 			}
 		 
 		 //
@@ -924,8 +905,8 @@
 			{
 			//Now add the chosengene to the baby
 			//First, get the trait pointer
-			   int first_traitnum = ((Trait) traits.firstElement()).trait_id;	
-			
+			   int first_traitnum = ((Trait) traits.firstElement()).trait_id;
+
 			   if (chosengene.lnk.linktrait == null)
 				  traitnum = first_traitnum;
 			   else
@@ -1202,7 +1183,7 @@
 	  
 	  //Set up the avgene
 		 Gene avgene = 
-		 new Gene((Trait) null, 0.0, (NNode) null, (NNode) null, false, 0.0, 0.0); 
+		 new Gene(null, 0.0, null, null, false, 0.0, 0.0);
 	  //First, average the Traits from the 2 parents to form the baby's Traits
 	  //It is assumed that trait vectors are the same length
 	  //In the future, may decide on a different method for 
@@ -1346,7 +1327,7 @@
 		 
 			while (itr_newgenes.hasNext()) {
 			   _curgene2 = ((Gene) itr_newgenes.next());
-			
+
 			   if (_curgene2.lnk.in_node.node_id == chosengene.lnk.in_node.node_id
 			   && _curgene2.lnk.out_node.node_id == chosengene.lnk.out_node.node_id
 			   && _curgene2.lnk.is_recurrent == chosengene.lnk.is_recurrent) {
@@ -1371,7 +1352,7 @@
 			//Now add the chosengene to the baby
 			//First, get the trait pointer
 			   int first_traitnum = ((Trait) traits.firstElement()).trait_id;
-			
+
 			   if (chosengene.lnk.linktrait == null)
 				  traitnum = first_traitnum;
 			   else
@@ -1540,7 +1521,8 @@
    *
    *
    */
-	   public Genome mate_singlepoint(Genome g, int genomeid) 
+	   @SuppressWarnings("ConstantConditions")
+	   public Genome mate_singlepoint(Genome g, int genomeid)
 	  {
 		 String mask4 = " 0000";
 		 DecimalFormat fmt4 = new DecimalFormat(mask4);
@@ -1601,7 +1583,7 @@
 	  
 	  //Set up the avgene
 		 Gene avgene = 
-		 new Gene((Trait) null, 0.0, (NNode) null, (NNode) null, false, 0.0, 0.0); 
+		 new Gene(null, 0.0, null, null, false, 0.0, 0.0);
 	  
 		 Vector newgenes = new Vector(genes.size(), 0);
 		 Vector newnodes = new Vector(nodes.size(), 0);
@@ -1626,10 +1608,8 @@
 		 }
 	  
 	  //System.out.print("\n crossing point is :"+crosspoint);
-	  
-		 genecounter = 0;
-	  
-		 boolean doneA = false;
+
+		  boolean doneA = false;
 		 boolean doneB = false;
 		 boolean done = false;
 		 double v1 = 0.0;
@@ -2241,15 +2221,12 @@
 	  
 	  
 	  //Make attempts to find an unconnected pair
-		 trycount = 0;
-	  
-	  //Decide whether to make this recurrent
+
+		  //Decide whether to make this recurrent
 		 if (NeatRoutine.randfloat() < Neat.p_recur_only_prob)
 			do_recur = true;
-		 else
-			do_recur = false;
-	  
-	  //Find the first non-sensor so that the to-node won't look at sensors as
+
+		  //Find the first non-sensor so that the to-node won't look at sensors as
 	  //possible destinations
 	  
 		 itr_node = nodes.iterator();
@@ -2263,8 +2240,7 @@
 			first_nonsensor++;
 		 
 		 }
-		 found = false;
-		 while (trycount < tries) 
+		  while (trycount < tries)
 		 {
 		 //
 		 // recurrency case .........
@@ -2276,10 +2252,7 @@
 			// at this point :
 			//50% of prob to decide a loop recurrency( node X to node X)
 			// 50% a normal recurrency ( node X to node Y)
-			   if (NeatRoutine.randfloat() > 0.5)
-				  loop_recur = true;
-			   else
-				  loop_recur = false;
+				loop_recur = NeatRoutine.randfloat() > 0.5;
 			
 			   if (loop_recur) 
 			   {
@@ -2379,9 +2352,8 @@
 		 
 		 //Check to see if this innovation already occured in the population
 			itr_innovation = pop.innovations.iterator();
-		 
-			done = false;
-			while (!done) 
+
+			 while (!done)
 			{
 			
 			   if (!itr_innovation.hasNext()) 
@@ -2469,9 +2441,8 @@
 	  
 		 if (genes.size() < 15) 
 		 {
-		 
-			step2 = false;
-			for (j = 0; j < genes.size(); j++) 
+
+			 for (j = 0; j < genes.size(); j++)
 			{
 			   _gene = (Gene) genes.elementAt(j);
 			   if (_gene.enable && (_gene.lnk.in_node.gen_node_label != NeatConstant.BIAS))
@@ -2756,9 +2727,9 @@
 		 //Connect the nodes 
 		 
 			innov_number = 0; //counter for labelling the innov_num  of genes
-			gene_number = 0;  //counter gene created
-		 
-		 //Step through the connection matrix, creating connection genes
+			 //counter gene created
+
+			 //Step through the connection matrix, creating connection genes
 		 
 			cmp = cm;
 		 
@@ -3000,8 +2971,8 @@
 			genomeB = genes;
 		 }
 	  
-		 double v3[][] = new double[size2*2][2];
-		 double vr[] = new double[size2*2];
+		 double[][] v3 = new double[size2*2][2];
+		 double[] vr = new double[size2*2];
 	  
 	  
 	  
@@ -3074,7 +3045,8 @@
 			   
 			   else 
 			   {
-				  if (doneA && !doneB)
+				   //noinspection ConstantConditions
+				   if (doneA && !doneB)
 				  {
 					 v3[j][0] = v1;
 					 v3[j][1] = 0.0;
@@ -3199,7 +3171,7 @@
 			for (j2=0; j2 < len_max; j2++)
 			{
 			   if (v3[j2][0] > 0.0)
-				  System.out.print(fmt4.format((long)column++));
+				  System.out.print(fmt4.format(column++));
 			   else
 				  System.out.print("     ");
 			}
@@ -3242,10 +3214,9 @@
 		 xFile.IOseqOpenW(false);
 	  
 		 try {
-		 
-		 
-			String riga = descr;
-			xFile.IOseqWrite(riga);
+
+
+			 xFile.IOseqWrite(descr);
 		 
 			print_to_file(xFile);
 		 

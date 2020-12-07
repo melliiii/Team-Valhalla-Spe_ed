@@ -14,13 +14,13 @@ public class EnvConstant {
 	public static String OS_VERSION = " ";
 
 	// current directory
-	public static String JNEAT_DIR = "";
+	public static final String JNEAT_DIR = "";
 
 	// current file name for parameter single without dir o other)
-	public static String NAME_PARAMETER = "parametri";
+	public static final String NAME_PARAMETER = "parametri";
 
 	// current file name for parameter single without dir o other)
-	public static String NAME_SESSION = "session";
+	public static final String NAME_SESSION = "session";
 
 	// current full data set name file parametri
 	//   public static String DSN_PARAMETER = "xxx";
@@ -29,11 +29,11 @@ public class EnvConstant {
 	//   public static String DSN_SESSION = "xxx";
 
 	// name of sub-directory for genome, population winner others...
-	public static String DSN_DIR_DATA = "data";
+	public static final String DSN_DIR_DATA = "data";
 
 	// character for composing full dsn : is a separator for this system
 
-	public static String OS_FILE_SEP = "\\";
+	public static final String OS_FILE_SEP = "\\";
 
 	// name of GENOME 1
 
@@ -68,10 +68,10 @@ public class EnvConstant {
 	public static String PREFIX_WINNER_FILE = "xwinner";
 	public static double PROBABILITY_OF_CONNECTION = 0.2;
 	public static boolean RECURSION = false; // simulazione da classe
-	public static int SIMULATION_FROM_CLASS = 2; // simulazione da file
-	public static int SIMULATION_FROM_FILE = 1;
-	public static int START_FROM_GENOME = 1;
-	public static int START_FROM_OLD_POPULATION = 3;
+	public static final int SIMULATION_FROM_CLASS = 2; // simulazione da file
+	public static final int SIMULATION_FROM_FILE = 1;
+	public static final int START_FROM_GENOME = 1;
+	public static final int START_FROM_OLD_POPULATION = 3;
 	public static int TYPE_OF_SIMULATION = 0;
 	public static int TYPE_OF_START = 0;
 	public static int NUMBER_OF_EPOCH = 0;
@@ -84,7 +84,7 @@ public class EnvConstant {
 	public static String REPORT_SPECIES_TESTA = "";
 
 //	public static int SERIAL_WINNER = 0;
-	public static int START_FROM_NEW_RANDOM_POPULATION = 2;
+	public static final int START_FROM_NEW_RANDOM_POPULATION = 2;
 	public static boolean STOP_EPOCH = false;
 	public static int NUMBER_OF_SAMPLES = 0;
 	// current organism with good fitness
@@ -98,9 +98,9 @@ public class EnvConstant {
 	public static String PREFIX_GENOME_RANDOM = "genome.rnd";
 	public static int ACTIVATION_PERIOD = 0;
 	public static int ACTIVATION_TIMES = 1;
-	public static int AUTOMATIC = 1;
+	public static final int AUTOMATIC = 1;
 	public static String CURRENT_FILE = "xxx";
-	public static int MANUAL = 2;
+	public static final int MANUAL = 2;
 	public static int SERIAL_SUPER_WINNER = 0;
 	public static boolean SUPER_WINNER_ = false;
 	// current genome used for execution

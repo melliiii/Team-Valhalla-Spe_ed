@@ -86,7 +86,7 @@
 	  
 	  //Get recur
 		 curword = st.nextToken();
-		 boolean recur = Integer.parseInt(curword) == 1 ? true : false;
+		 boolean recur = Integer.parseInt(curword) == 1;
 	  
 	  //Get innovation num
 		 curword = st.nextToken();
@@ -98,7 +98,7 @@
 	  
 	  //Get enable
 		 curword = st.nextToken();
-		 enable = Integer.parseInt(curword) == 1 ? true : false;
+		 enable = Integer.parseInt(curword) == 1;
 	  
 		 Trait traitptr = null;
 		 if (trait_num > 0 && traits != null) {
@@ -171,26 +171,26 @@
 	  }    
 	   public void print_to_file(IOseq xFile) {
 	  
-		 StringBuffer s2 = new StringBuffer("");
+		 StringBuilder s2 = new StringBuilder();
 	  
 		 s2.append("gene ");
 	  
 		 if (lnk.linktrait != null)
-			s2.append(" " + lnk.linktrait.trait_id);
+			s2.append(" ").append(lnk.linktrait.trait_id);
 		 else
 			s2.append(" 0");
 	  
-		 s2.append(" " + lnk.in_node.node_id);
-		 s2.append(" " + lnk.out_node.node_id);
-		 s2.append(" " + lnk.weight);
+		 s2.append(" ").append(lnk.in_node.node_id);
+		 s2.append(" ").append(lnk.out_node.node_id);
+		 s2.append(" ").append(lnk.weight);
 	  
 		 if (lnk.is_recurrent)
 			s2.append(" 1");
 		 else
 			s2.append(" 0");
 	  
-		 s2.append(" " + innovation_num);
-		 s2.append(" " + mutation_num);
+		 s2.append(" ").append(innovation_num);
+		 s2.append(" ").append(mutation_num);
 	  
 		 if (enable)
 			s2.append(" 1");
@@ -199,7 +199,5 @@
 	  
 		 xFile.IOseqWrite(s2.toString());
 	  
-	  }/**
-   * Insert the method's description here.
-   * Creation date: (24/01/2002 16.59.13)
-   */                       }
+	  }
+}

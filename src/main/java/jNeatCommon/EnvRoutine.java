@@ -5,6 +5,7 @@ import java.awt.*;import java.util.*;   /**
  * Creation date: (09/04/2002 16.18.41)
  * @author: Administrator
  */
+	@SuppressWarnings("ALL")
 	public class EnvRoutine {
    /**
    * Routine constructor comment.
@@ -116,10 +117,10 @@ import java.awt.*;import java.util.*;   /**
 		 
 			xline = xFile.IOseqRead();
 			boolean done = false;
-			while ((xline != "EOF") && (!done)) 
+			while (!(xline.equals("EOF")) && (!done))
 			{
 			
-			   if (!(xline.startsWith("//", 0))) 
+			   if (!(xline.startsWith("//")))
 			   {
 				  rc++;
 			   }
@@ -165,21 +166,14 @@ import java.awt.*;import java.util.*;   /**
 	  
 		 if (ret)
 		 {
-		 
-		 
-		 
-			sff = 0;
-			sfc = 0;
-		 
-		 
 			try 
 			{
 			
 			   xline = xFile.IOseqRead();
-			   while (xline != "EOF") 
+			   while (xline.equals("EOF"))
 			   {
 			   
-				  if (! xline.startsWith(";", 0)) 
+				  if (! xline.startsWith(";")) //TODO (Melli) Test...
 				  {
 				  
 					 riga = new StringTokenizer(xline);
@@ -270,10 +264,7 @@ import java.awt.*;import java.util.*;   /**
 						{
 						   curword = riga.nextToken();
 						   r++;
-						   if (curword.equalsIgnoreCase("Y"))
-							  EnvConstant.RECURSION = true;
-						   else
-							  EnvConstant.RECURSION = false;
+							EnvConstant.RECURSION = curword.equalsIgnoreCase("Y");
 						}
 					 
 						if (elem.equalsIgnoreCase("probability_of_connection"))

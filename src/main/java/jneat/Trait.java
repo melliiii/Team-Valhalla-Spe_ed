@@ -27,8 +27,7 @@
 		 trait_id = t.trait_id;
 	  
 		 this.params = new double[Neat.p_num_trait_params];
-		 for (int j = 0; j < Neat.p_num_trait_params; j++)
-			params[j] = t.params[j];
+		   if (Neat.p_num_trait_params >= 0) System.arraycopy(t.params, 0, params, 0, Neat.p_num_trait_params);
 	  
 	  }                                          
    
@@ -60,8 +59,7 @@
 	  } /**
    * Insert the method's description here.
    * Creation date: (11/01/2002 16.24.46)
-   * @param i int
-   */                                                   
+	 */
 	   public Trait(String xline) {
 		 StringTokenizer st;
 		 String curword;
@@ -107,12 +105,9 @@
 			System.out.print(params[count] + " ");
 		 }
 		 System.out.print("\n");
-	  }/**
-   * Insert the method's description here.
-   * Creation date: (18/01/2002 13.02.06)
-   */                        
-   
-   /**
+	  }
+
+	/**
    *Special Constructor creates a new Trait which is the average
    *of 2 existing traits passed in
    */
@@ -148,8 +143,7 @@
 	   public Trait(char a) {}/**
    * Insert the method's description here.
    * Creation date: (01/02/2002 8.23.59)
-   * @param a char
-   */                     
+	 */
    
 	   public Trait(int id, double p1, double p2, double p3, double p4, double p5, double p6, double p7, double p8, double p9)
 	  {
@@ -168,13 +162,13 @@
 		 params[7]=0;
 	  }
 	   public void print_to_file(IOseq xFile) {
-		 StringBuffer s2 = new StringBuffer("");
+		 StringBuilder s2 = new StringBuilder();
 	  
 		 s2.append("trait ");
-		 s2.append(trait_id+" ");
+		 s2.append(trait_id).append(" ");
 	  
 		 for (int count = 0; count < Neat.p_num_trait_params; count++) {
-			s2.append(params[count] + " ");
+			s2.append(params[count]).append(" ");
 		 }
 		 xFile.IOseqWrite(s2.toString());
 	  

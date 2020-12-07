@@ -364,7 +364,7 @@
 	  //Sort the population and mark for death those after survival_thresh * pop_size
 	  
 		 Comparator cmp = new order_species();
-		 Collections.sort(sorted_species, cmp);
+		 sorted_species.sort(cmp);
 	  
 	  // sorted species has all species ordered : the species with orig_fitness maximum is first
 	  
@@ -374,9 +374,9 @@
 	  
 	  
 	  
-		 StringBuffer rep1 = new StringBuffer("");
+		 StringBuffer rep1 = new StringBuffer();
 	  //   	System.out.print("\n  The BEST specie is #" + best_species_num);
-		 rep1.append("\n  the BEST  specie is #" + best_species_num);
+		 rep1.append("\n  the BEST  specie is #").append(best_species_num);
 	  
 	  
 	  
@@ -387,13 +387,13 @@
 		 {
 			_specie = ((Species) itr_specie.next());
 		 //	  	System.out.print("\n  orig fitness of Species #" + _specie.id);
-			rep1.append("\n  orig fitness of Species #" + _specie.id);
+			rep1.append("\n  orig fitness of Species #").append(_specie.id);
 		 
 		 //	  	System.out.print(" (Size " + _specie.getOrganisms().size() + "): ");
-			rep1.append(" (Size " + _specie.getOrganisms().size() + "): ");
+			rep1.append(" (Size ").append(_specie.getOrganisms().size()).append("): ");
 		 
 		 // 	  	System.out.print(" is " + ((Organism) (_specie.organisms.firstElement())).orig_fitness); 
-			rep1.append(" is " + ((Organism) (_specie.organisms.firstElement())).orig_fitness); 
+			rep1.append(" is ").append(((Organism) (_specie.organisms.firstElement())).orig_fitness);
 		 
 		 // 	  	System.out.print(" last improved ");
 			rep1.append(" last improved ");
@@ -402,13 +402,13 @@
 			rep1.append(_specie.age - _specie.age_of_last_improvement);
 		 
 		 //	  	System.out.print(" offspring "+_specie.expected_offspring);
-			rep1.append(" offspring "+_specie.expected_offspring);
+			rep1.append(" offspring ").append(_specie.expected_offspring);
 		 
 		 }
 	  
 	  
 		 EnvConstant.REPORT_SPECIES_TESTA = rep1.toString();
-		 rep1 = new StringBuffer("");
+		 rep1 = new StringBuffer();
 	  
 	  
 	  
@@ -428,7 +428,7 @@
 			highest_fitness = ((Organism) curspecies.organisms.firstElement()).orig_fitness; 
 			highest_last_changed = 0;
 		 //	  	System.out.print("\n    Good! Population has reached a new *RECORD FITNESS* -> " + highest_fitness);
-			rep1.append("\n    population has reached a new *RECORD FITNESS* -> " + highest_fitness);
+			rep1.append("\n    population has reached a new *RECORD FITNESS* -> ").append(highest_fitness);
 
 
 			// 01.06.2002
@@ -448,7 +448,7 @@
 			EnvConstant.REPORT_SPECIES_TESTA = "";
 		 
 		 //	  	System.out.print("\n  Are passed "+ highest_last_changed+ " generations from last population fitness record: "+ highest_fitness); 
-			rep1.append("\n    are passed "+ highest_last_changed+ " generations from last population fitness record: "+ highest_fitness); 
+			rep1.append("\n    are passed ").append(highest_last_changed).append(" generations from last population fitness record: ").append(highest_fitness);
 		 }
 	  
 	  
@@ -506,8 +506,7 @@
 			{
 			   _specie = null;
 			//Take away a constant number of expected offspring from the worst few species
-			   stolen_babies = 0;
-			   for (int j = sorted_species.size() - 1; (j >= 0) && (stolen_babies < NUM_STOLEN); j--) 
+				for (int j = sorted_species.size() - 1; (j >= 0) && (stolen_babies < NUM_STOLEN); j--)
 			   {
 				  _specie = (Species) sorted_species.elementAt(j);
 			   //				System.out.print("\n Analisis SPECIE #"+j+" (size = "+_specie.organisms.size()+" )");
@@ -538,7 +537,7 @@
 			//Determine the exact number that will be given to the top three
 			//They get , in order, 1/5 1/5 and 1/10 of the stolen babies
 			
-			   int tb_four[] = new int[3];
+			   int[] tb_four = new int[3];
 			   tb_four[0] = Neat.p_babies_stolen / 5;
 			   tb_four[1] = tb_four[0];
 			   tb_four[2] = Neat.p_babies_stolen / 10;
@@ -722,9 +721,8 @@
 		 int i_specie = 0;
 	  
 		 vdel = new Vector(species.size());
-		 orgcount = 0;
-	  
-		 while (itr_specie.hasNext()) 
+
+		  while (itr_specie.hasNext())
 		 {
 			_specie = ((Species) itr_specie.next());
 			size_of_curr_specie = _specie.organisms.size();
@@ -1003,8 +1001,8 @@
 			organisms.add(new Organism(0,new_genome,1));
 		 }
 	  
-		 cur_node_id = i + o + nmax + 1;;
-		 cur_innov_num = ( i + o + nmax) * (i + o + nmax) + 1;
+		 cur_node_id = i + o + nmax + 1;
+		  cur_innov_num = ( i + o + nmax) * (i + o + nmax) + 1;
 	  
 //		 System.out.print("\n  The first  node_id  available is "+cur_node_id);
 //		 System.out.print("\n  The first innov_num available is "+cur_innov_num);
@@ -1046,8 +1044,8 @@
 		 
 		 
 		 
-			StringBuffer tmp1 = new StringBuffer("");
-			StringBuffer tmp2 = new StringBuffer("");
+			/*StringBuffer tmp1 = new StringBuffer();
+			StringBuffer tmp2 = new StringBuffer();*/
 		 
 			int status = 0;
 		 
@@ -1059,7 +1057,7 @@
 			
 			   xline = xFile.IOseqRead();
 			
-			   while (xline != "EOF") 
+			   while (!xline.equals("EOF"))
 			   {
 				  st = new StringTokenizer(xline);
 				  curword = st.nextToken();
@@ -1074,7 +1072,7 @@
 					 idcheck = Integer.parseInt(curword);
 				  
 					 new_genome=new Genome(idcheck,xFile);
-					 new_genome.notes = tmp2.toString();
+					 //new_genome.notes = tmp2.toString();
 				  
 					 organisms.add(new Organism(0,new_genome,1));
 					 if (cur_node_id < new_genome.get_last_node_id())
@@ -1219,9 +1217,9 @@
 		 
 		 
 		 
-			StringBuffer tmp1 = new StringBuffer();
-			StringBuffer tmp2 = new StringBuffer();
-		 
+			/*StringBuffer tmp1 = new StringBuffer();
+			StringBuffer tmp2 = new StringBuffer();*/
+
 			int status = 0;
 		 
 		 
@@ -1232,7 +1230,7 @@
 			
 			   xline = xFile.IOseqRead();
 			
-			   while (xline != "EOF") 
+			   while (!xline.equals("EOF"))
 			   {
 				  st = new StringTokenizer(xline);
 				  curword = st.nextToken();
@@ -1247,7 +1245,7 @@
 					 idcheck = Integer.parseInt(curword);
 				  
 					 new_genome=new Genome(idcheck,xFile);
-					 new_genome.notes = tmp2.toString();
+					// new_genome.notes = tmp2.toString();
 				  
 					 if (xok) 	
 						organisms.add(new Organism(0,new_genome,1));
@@ -1266,7 +1264,7 @@
 
 
 					  
-					 if (xline.indexOf("WINNER") >= 0)
+					 if (xline.contains("WINNER")) //TODO Check functionality (before "if (xline.indexOf("WINNER") >= 0)")
 					 {
 					 //	                System.out.print("\n found a winner genome" + xline);
 						xok = true;

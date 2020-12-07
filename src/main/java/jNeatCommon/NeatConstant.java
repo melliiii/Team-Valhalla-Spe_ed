@@ -18,7 +18,7 @@
 	  public static final int NEWNODE = 0;
 	  public static final int NEWLINK = 1;
    
-	  public static Random myRandom = new Random();
+	  public static final Random myRandom = new Random();
 	  public static final double MAXINT = Math.pow(2, 31);
    
    

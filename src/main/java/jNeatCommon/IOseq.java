@@ -7,7 +7,7 @@
 
 																public class IOseq {
    
-	  private String NomeFile;
+	  private final String NomeFile;
 	  private FileWriter fW;
 	  private BufferedWriter bW;
 	  private PrintWriter pW;
@@ -22,10 +22,9 @@
 		 try {
 		 
 			line = bR.readLine();
-			if (line == null || line == "")
+			if (line == null || line.isEmpty())
 			   line = "EOF";
-			else {
-			}
+
 		 
 		 } 
 			 catch (Exception evt) {

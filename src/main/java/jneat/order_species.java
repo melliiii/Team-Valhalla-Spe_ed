@@ -1,7 +1,6 @@
    package jneat;
 
-   import java.util.*;
-/**
+   /**
  * 
  * 
  * 
@@ -22,12 +21,8 @@
 	  
 		 Organism _ox = (Organism) _sx.organisms.firstElement();
 		 Organism _oy = (Organism) _sy.organisms.firstElement();
-	  
-		 if (_ox.orig_fitness < _oy.orig_fitness)
-			return +1;
-		 if (_ox.orig_fitness > _oy.orig_fitness)
-			return -1;
-		 return 0;
-	  
-	  }
+
+		   return Double.compare(_oy.orig_fitness, _ox.orig_fitness);
+
+	   }
    }

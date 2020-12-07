@@ -328,8 +328,7 @@
 	  {
 		 if (t != null) 
 		 {
-			for (int count = 0; count < Neat.p_num_trait_params; count++)
-			   params[count] = t.params[count];
+			 if (Neat.p_num_trait_params >= 0) System.arraycopy(t.params, 0, params, 0, Neat.p_num_trait_params);
 		 } 
 		 else 
 		 {
@@ -507,18 +506,18 @@
 	   public void print_to_file(IOseq xFile) 
 	  {
 	  
-		 StringBuffer s2 = new StringBuffer("");
+		 StringBuilder s2 = new StringBuilder();
 	  
 		 s2.append("node ");
 		 s2.append(node_id);
 	  
 		 if (nodetrait != null)
-			s2.append(" " + nodetrait.trait_id);
+			s2.append(" ").append(nodetrait.trait_id);
 		 else
 			s2.append(" 0");
 	  
-		 s2.append(" " + type);
-		 s2.append(" " + gen_node_label);
+		 s2.append(" ").append(type);
+		 s2.append(" ").append(gen_node_label);
 	  
 		 xFile.IOseqWrite(s2.toString());
 	  

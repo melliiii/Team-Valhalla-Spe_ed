@@ -1,11 +1,7 @@
    package gui;
 
 
-   import javax.swing.*;
    import javax.swing.table.*;
-   import java.awt.*;
-   import java.awt.event.*;
-   import java.text.*;
 
 
    import java.util.*;
@@ -14,10 +10,10 @@
    
    
    
-	  public Vector data;
+	  public final Vector data;
 	  public int rows;
    
-	  public static final String columnNames[] = {" Parameter ", " Value "};
+	  public static final String[] columnNames = {" Parameter ", " Value "};
    
    
    
@@ -70,12 +66,9 @@
    	}
    */
 	   public boolean isCellEditable(int row, int col) {
-		 if (col == 1 ) { 
-			return true;
-		 } 
-		 return false;
-	  
-	  }
+		   return col == 1;
+
+	   }
    
    
    
@@ -103,7 +96,7 @@
 	  
 		 switch (col) {
 			case 0:
-			   s1.o1 = (String) value;
+			   s1.o1 = value;
 			case 1:
 			   {
 				  ox = value;
@@ -123,7 +116,7 @@
 						ox =  new Double(value.toString());
 					 }
 				  }
-				  s1.o2 = (Object) ox;
+				  s1.o2 = ox;
 			   
 			   
 			   }

@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("SuspiciousNameCombination")
 public class Stage extends JPanel implements KeyListener
 {
-    public static Random random = new Random();
+    public static final Random random = new Random();
     public Game game;
 
     public static GameMove testAI(Game game, Player self)
@@ -93,6 +94,29 @@ public class Stage extends JPanel implements KeyListener
         return result;
     }
 
+    public Stage(String title)
+    {
+        super();
+        addKeyListener(this);
+        setFocusable(true);
+
+        List<String> names = new ArrayList<>();
+        names.add("Frodo");
+        names.add("Gandalf");
+        names.add("Sam");
+        names.add("Bilbo");
+        names.add("Aragorn");
+        names.add("Sauron");
+
+        this.game = Game.create(50, 50, names);
+
+        JFrame frame = new JFrame(title);
+        frame.add(this);
+        frame.setState(Frame.ICONIFIED);
+        frame.setSize(1200, 700);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+    }
     public Stage()
     {
         super();
@@ -111,9 +135,10 @@ public class Stage extends JPanel implements KeyListener
 
         JFrame frame = new JFrame("gui");
         frame.add(this);
-        frame.setVisible(true);
+        frame.setState(Frame.ICONIFIED);
         frame.setSize(1200, 700);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
     }
 
     public void paintComponent(Graphics g)

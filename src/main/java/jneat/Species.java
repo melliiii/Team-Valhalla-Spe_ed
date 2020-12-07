@@ -197,7 +197,7 @@
 	  //Sort the population and mark for death those after survival_thresh * pop_size
 	  
 		 Comparator cmp = new order_orgs();
-		 Collections.sort(organisms, cmp);
+		 organisms.sort(cmp);
 	  
 	  //Update age_of_last_improvement here
 	  // (the first organism has the best fitness)
@@ -639,7 +639,7 @@
 						randmult = 1.0;
 				  //This tends to select better species
 					 randspeciesnum = (int) Math.floor((randmult * (sorted_species.size() - 1.0)) + 0.5); 
-					 for (sp_ext = 0; sp_ext < randspeciesnum; sp_ext++) {}
+					 //for (sp_ext = 0; sp_ext < randspeciesnum; sp_ext++) {}
 					 randspecies = (Species) sorted_species.elementAt(sp_ext);
 					 ++giveup;
 				  }

@@ -9,6 +9,7 @@
 
 
 /** Is a superclass for definition of all parameters , threshold and others values. */
+	@SuppressWarnings("unused")
 	public class Neat {
    /** Probability  of mutating a single trait param */
 	  public static double p_trait_param_mut_prob;
@@ -150,16 +151,19 @@
    
 	   public static String getDescription(String xkey) {
 		 try {
-			Class c = Class.forName("jneat.Neat");
+		 	if(!Class.forName("jneat.Neat").equals(Neat.class)){
+		 		throw new Exception("SOMETHING REALLY WRONG... NEAT != NEAT :exploding_head:");
+			}
+			Class<Neat> c = Neat.class;
 			Field f = c.getField("d_" + xkey);
 			return (String) f.get(c);
 		 } 
 			 catch (Throwable e) {
-			   return null;
-			}
-	  }                                                         
-   
-	   public static void initbase() {
+				 return null;
+			 }
+	  }
+
+	public static void initbase() {
 		 p_trait_param_mut_prob = 0.25;
 		 p_trait_mutation_power = 0.25;
 		 p_linktrait_mut_sig = 0.25;
@@ -259,26 +263,25 @@
 	  
 		 try {
 		 
-			Class c = Class.forName("jneat.Neat");
+			Class<Neat> c = Neat.class;
 			Field[] fieldlist = c.getDeclaredFields();
-		 
-			for (int i = 0; i < fieldlist.length; i++) {
-			   Field f1 = fieldlist[i];
-			   String x1 = f1.getName();
-			
-			   if (x1.startsWith("p_")) {
-				  Field f2 = c.getField("d_" + Neat.normalizeName(x1));
-				  Object s1 = f1.get(c);
-				  Object s2 = f2.get(c);
-			   //	   String riga = s1 + "  " + s2;
-				  String riga = x1 + "  " + s1;
-				  xFile.IOseqWrite(riga);
-			   }
-			}
+
+			 for (Field f1 : fieldlist) {
+				 String x1 = f1.getName();
+
+				 if (x1.startsWith("p_")) {
+					 Field f2 = c.getField("d_" + Neat.normalizeName(x1));
+					 Object s1 = f1.get(c);
+					 Object s2 = f2.get(c);
+					 //	   String riga = s1 + "  " + s2;
+					 String riga = x1 + "  " + s1;
+					 xFile.IOseqWrite(riga);
+				 }
+			 }
 		 
 		 } 
 			 catch (Throwable e) {
-			   System.err.println(e);
+			   e.printStackTrace();
 			}
 	  
 		 xFile.IOseqCloseW();
@@ -287,7 +290,7 @@
    
 	   public static boolean readParam(String xNomeFile) {
 	  
-		 boolean ret = true; 
+		 boolean ret;
 		 String xline;
 		 IOseq xFile;
 		 StringTokenizer st;
@@ -304,7 +307,7 @@
 		 
 		 {
 			try {
-			   Class c = Class.forName("jneat.Neat");
+			   Class<Neat> c = Neat.class;
 			   Field[] fieldlist = c.getDeclaredFields();
 			
 			   int number_params = fieldlist.length /2;
@@ -318,25 +321,18 @@
 				  st = new StringTokenizer(xline);
 			   //skip comment
 			   
-				  s1 = st.nextToken();
+				  st.nextToken();
 			   // real value
 				  s1 = st.nextToken();
 			   
 				  if (x1.startsWith("p_")) {
-					 if (x2.toString().equals("double")) {
-						double n1 = Double.parseDouble(s1);
-						f1.set(c, (new Double(n1)));
-					 }
-					 if (x2.toString().equals("int")) {
-						int n1 = Integer.parseInt(s1);
-						f1.set(c, (new Integer(n1)));
-					 }
+					  parseAs(s1, c, f1, x2);
 				  }
 			   }
 			
 			} 
 				catch (Throwable e) {
-				  System.err.println(e);
+				  e.printStackTrace();
 			   }
 		 
 			xFile.IOseqCloseR();
@@ -350,20 +346,31 @@
 	  
 	  
 		 return ret;
-	  }                                                                                                                  
-   
-	   public static void getParam(vectTableModel _model) {
+	  }
+
+	private static void parseAs(String s1, Class<Neat> c, Field f1, Object x2) throws IllegalAccessException {
+		if (x2.toString().equals("double")) {
+		   double n1 = Double.parseDouble(s1);
+		   f1.set(c, n1);
+		}
+		if (x2.toString().equals("int")) {
+		   int n1 = Integer.parseInt(s1);
+		   f1.set(c, n1);
+		}
+	}
+
+	public static void getParam(vectTableModel _model) {
 	  
 		 String xline;
 		 StringTokenizer st = null;
 		 String s1 = null;
 		 String s2 = null;
 		 Object m1 = null;
-		 Field fx = null;
+		 Field fx;
 		 int j = 0;
 	  
 		 try {
-			Class c = Class.forName("jneat.Neat");
+			Class<Neat> c = Neat.class;
 			Field[] fieldlist = c.getDeclaredFields();
 		 
 			int number_params = fieldlist.length / 2;
@@ -377,12 +384,9 @@
 			   String nomeF1 = nomeF.substring(2);
 			   if (nomeF.substring(0,2).equalsIgnoreCase("p_"))
 			   {
-				  Object o1 = nomeF1;
 				  fx = c.getField("p_" + nomeF1);
-				  Object o2 = fx.get(c);
-			   
-				  _model.setValueAt(o1,j,0);
-				  _model.setValueAt(o2,j,1);
+				  _model.setValueAt(nomeF1,j,0);
+				  _model.setValueAt(fx.get(c),j,1);
 			   
 				  j++;
 			   }
@@ -393,11 +397,10 @@
 		 
 		 } 
 			 catch (Throwable e) {
-			   System.err.println(e);
+			   e.printStackTrace();
 			}
 	  
-		 _model.rows = j;       
-		 return;
+		 _model.rows = j;
 	  }                                                                                                                                                                                                               
 	   public static void updateParam(vectTableModel _model) 
 	  {
@@ -407,7 +410,7 @@
 	  
 		 for (int j = 0; j < _model.data.size(); j++) {
 			try {
-			   Class c = Class.forName("jneat.Neat");
+			   Class<Neat> c = Neat.class;
 			   ParamValue ox = (ParamValue) _model.data.elementAt(j);
 			
 			   Object k =  _model.getValueAt(j,0);
@@ -421,16 +424,9 @@
 			*/ 
 			   Field f1 = c.getField("p_" + xkey);
 			   Object fty = f1.getType();
-			
-			   if (fty.toString().equals("double")) {
-				  double n1 = Double.parseDouble(xval);
-				  f1.set(c, (new Double(n1)));
-			   }
-			   if (fty.toString().equals("int")) {
-				  int n1 = Integer.parseInt(xval);
-				  f1.set(c, (new Integer(n1)));
-			   }
-			
+
+				parseAs(xval, c, f1, fty);
+
 			} 
 				catch (Throwable e) {
 				  System.out.print("\n errore su jneat.updateParam = "+e);

@@ -120,7 +120,7 @@
    /**
    * Insert the method's description here.
    * Creation date: (15/01/2002 7.53.27)
-   * @param c int
+   * @param w int
    */
 	   public Link(double w, NNode inode, NNode onode, boolean recur) 
 	  {
@@ -173,7 +173,7 @@
 	  }/**
    * Insert the method's description here.
    * Creation date: (18/01/2002 9.16.45)
-   * @param newIs_traversed boolean
+   * @param is_traversed boolean
    */                       
 	   public void setIs_traversed(boolean is_traversed) {
 		 this.is_traversed = is_traversed;

@@ -1,8 +1,6 @@
    package jNeatCommon;
 
 
-   import java.util.*;
-   import java.io.*;
    import jNeatCommon.*;
 
 																public class NeatRoutine {
@@ -58,8 +56,7 @@
 	  }
 	   public static double randgauss() 
 	  {
-		 double  n = NeatConstant.myRandom.nextGaussian();
-		 return (n);
+		  return (NeatConstant.myRandom.nextGaussian());
 	  }
 	   public static int randint(int x) 
 	  {

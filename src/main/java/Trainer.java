@@ -1,12 +1,10 @@
-import jneat.Population;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import jneat.*;
+
 
 @SuppressWarnings("SuspiciousNameCombination")
 public class Trainer
@@ -218,7 +216,7 @@ public class Trainer
         // Main loop iterations
         // i is the current iteration
         double last_avg = 0;
-        for (int i = 0; i < iterations; ++i)
+        for (int current_iteration = 0; current_iteration < iterations; ++current_iteration)
         {
             Vector<Organism> neatOrgs = population.getOrganisms();
             int brainCount = neatOrgs.size();
@@ -320,14 +318,15 @@ public class Trainer
             last_avg = avg;
 
             DecimalFormat df = new DecimalFormat("###.##");
-            System.out.println("\nIteration: " + i + "; current best: " + df.format(best) + "; current avg: " + df.format(avg));
+            System.out.println("\nIteration: " + current_iteration + "; current best: " + df.format(best) + "; current avg: " + df.format(avg));
 
             //if (dif > avg * 2 || i % 10 == 0)
             if(GUI_MODE)
             {
                 population.print_to_file_by_species("SavedPopulation.txt");
 
-                Stage stage = new Stage();
+                Stage stage = new Stage("Iteration: " + current_iteration);
+
                 List<String> names = new ArrayList<>();
                 for (int p = 0; p < player_count; ++p)
                 {
@@ -335,7 +334,7 @@ public class Trainer
                 }
 
                 int width = 30;
-                if (i % 10 == 0)
+                if (current_iteration % 10 == 0)
                 {
                     width = 50;
                 }
@@ -375,12 +374,12 @@ public class Trainer
                     if (stage.isDisplayable())
                     {
                         stage.repaint();
-                        Executors.newSingleThreadScheduledExecutor().schedule(() -> null, 100, TimeUnit.MILLISECONDS);
+                        //Executors.newSingleThreadScheduledExecutor().schedule(() -> null, 100, TimeUnit.MILLISECONDS);
                     }
                 }
             }
 
-            population.epoch(i);
+            population.epoch(current_iteration);
         }
     }
 }

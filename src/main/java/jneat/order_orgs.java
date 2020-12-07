@@ -19,11 +19,7 @@
 	  
 		 Organism _ox = (Organism) o1;
 		 Organism _oy = (Organism) o2;
-	  
-		 if (_ox.fitness < _oy.fitness)
-			return +1;
-		 if (_ox.fitness > _oy.fitness)
-			return -1;
-		 return 0;
-	  }
+
+		   return Double.compare(_oy.fitness, _ox.fitness);
+	   }
    }
