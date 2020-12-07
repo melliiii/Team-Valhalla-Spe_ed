@@ -13,4 +13,9 @@ public class GetThreadsCommand implements Command{
             System.out.println("-> No Threads running :c");
         }
     }
+
+    @Override
+    public String getDescription() {
+        return "displays a list of information for running side threads; USAGE: get_threads";
+    }
 }

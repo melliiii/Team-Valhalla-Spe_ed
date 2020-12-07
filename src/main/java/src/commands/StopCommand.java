@@ -28,4 +28,9 @@ public class StopCommand implements Command{
             new GetThreadsCommand().onCommand(null);
         }
     }
+
+    @Override
+    public String getDescription() {
+        return "terminates a given thread (either by id or name); USAGE: stop [name/id]";
+    }
 }

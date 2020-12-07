@@ -8,31 +8,30 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandManager {
-    private final ConcurrentHashMap<String, Command> commands;
+    private ConcurrentHashMap<String, Command> commands;
 
     public CommandManager(){
-        this.commands = new ConcurrentHashMap<>();
+        commands = new ConcurrentHashMap<>();
 
         // Add src.commands here! :3
-        this.commands.put("exit", new ExitCommand());
-        this.commands.put("quit", new ExitCommand());
-        this.commands.put("start", new StartCommand());
-        this.commands.put("stop", new StopCommand());
-        this.commands.put("get_threads", new GetThreadsCommand());
+        commands.put("help", new HelpCommand(commands));
+        commands.put("exit", new ExitCommand());
+        commands.put("quit", new ExitCommand());
+        commands.put("start", new StartCommand());
+        commands.put("stop", new StopCommand());
+        commands.put("get_threads", new GetThreadsCommand());
     }
 
-    public boolean perform(String line){
+    public void perform(String line){
         String[] args = line.split(" ");
-        if(args.length < 1) return false;
+        if(args.length < 1) return;
         String command = args[0];
-        args = (String[]) removeTheElement(args, 0);
+        args = removeTheElement(args, 0);
 
         Command cmd;
-        if((cmd = this.commands.get(command.toLowerCase())) != null){
+        if((cmd = commands.get(command.toLowerCase())) != null){
             cmd.onCommand(args);
-            return true;
         }
-        return false;
     }
 
     // Function to remove the element
@@ -49,7 +48,7 @@ public class CommandManager {
         }
 
         // Create ArrayList from the array
-        List<String> arrayList = new LinkedList<String>(Arrays.asList(arr));
+        List<String> arrayList = new LinkedList<>(Arrays.asList(arr));
 
         // Remove the specified element
         arrayList.remove(arrayList.get(index));
@@ -59,4 +58,5 @@ public class CommandManager {
         // return the resultant array
         return list2;
     }
+
 }

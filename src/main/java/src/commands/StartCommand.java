@@ -43,4 +43,9 @@ public class StartCommand implements Command {
             }
         }
     }
+
+    @Override
+    public String getDescription() {
+        return "start a service; USAGE: start live/stage/trainer";
+    }
 }
