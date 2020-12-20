@@ -13,6 +13,7 @@ public class Stage extends JPanel implements KeyListener
 {
     public static Random random = new Random();
     public Game game;
+    public AreaFinder finder;
 
     public static GameMove testAI(Game game, Player self)
     {
@@ -103,25 +104,31 @@ public class Stage extends JPanel implements KeyListener
         setFocusable(true);
 
         List<String> names = new ArrayList<String>();
-        names.add("Frodo");
-        names.add("Gandalf");
-        names.add("Sam");
-        names.add("Bilbo");
-        names.add("Aragorn");
-        names.add("Sauron");
+        names.add("Siegfried");
+        names.add("Brunhilde");
+        names.add("Siegfried");
+        names.add("Brunhilde");
+        names.add("Siegfried");
+        names.add("Brunhilde");
 
-        Game game = Game.create(50, 50, names);
+        Game game = Game.create(80, 80, names);
         this.game = game;
+        //finder = new AreaFinder(game);
 
         JFrame frame = new JFrame("gui");
         frame.add(this);
         frame.setVisible(true);
-        frame.setSize(1200, 700);
+        frame.setSize(600, 600);
+        setBackground(Color.black);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public void paintComponent(Graphics g)
     {
+        if (finder != null)
+        {
+            finder.findAreas();
+        }
         super.paintComponent(g);
 
         int cellWidth = getHeight() / game.getCells().length;
@@ -133,38 +140,48 @@ public class Stage extends JPanel implements KeyListener
             for (int x = 0; x < game.getCells()[y].length; ++x)
             {
                 g.setColor(cell2Color(game.getCells()[y][x]));
+                if (finder != null)
+                {
+                    if (finder.getCollected()[y][x] != null)
+                    {
+                        float scale = (float)finder.getCollected()[y][x].getLastParent().getLeafCount() / (float)(game.getWidth() * game.getHeight());
+                        scale = (float)Math.sqrt(Math.sqrt(scale));
+                        g.setColor(new Color(1.0f-scale, scale, 0.0f));
+                    }
+                }
+
                 int cellX = x * cellWidth + centerX - game.getCells()[y].length * cellWidth / 2;
                 int cellY = y * cellWidth + centerY - game.getCells().length * cellWidth / 2;
-                g.fillRect(cellX, cellY, cellWidth, cellWidth);
+                g.fillRect(cellX, cellY, cellWidth-1, cellWidth-1);
             }
         }
     }
 
-    public static Color cell2Color(int cell)
+    public Color cell2Color(int cell)
     {
         Color result = Color.BLACK;
         switch (cell)
         {
-            case 0:
-                result = Color.black;
-                break;
             case 1:
-                result =  Color.green;
+                result = Color.blue;
                 break;
             case 2:
-                result =  Color.blue;
+                result =  Color.cyan;
                 break;
             case 3:
-                result =  Color.red;
+                result =  Color.green;
                 break;
             case 4:
                 result =  Color.yellow;
                 break;
             case 5:
-                result =  Color.cyan;
+                result =  Color.orange;
                 break;
             case 6:
-                result =  Color.magenta;
+                result = Color.red;
+                break;
+            case 0:
+                result =  Color.black;
                 break;
             case -1:
                 result =  Color.white;
@@ -173,6 +190,11 @@ public class Stage extends JPanel implements KeyListener
                 Random r = new Random(cell);
                 result =  new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
                 break;
+        }
+
+        if (cell == game.getYou())
+        {
+            result =  new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
         }
 
         return result;
@@ -186,31 +208,41 @@ public class Stage extends JPanel implements KeyListener
     public void setGame(Game game)
     {
         this.game = game;
+        //finder = new AreaFinder(game);
     }
 
     public void loop()
     {
-        for (int t = 0; t < 1000; ++t) {
+        AreaFinder shared = new AreaFinder(game);
+        AlgorithmicAI[] ais = new AlgorithmicAI[game.getPlayerCount()];
+        for (int i = 0; i < game.getPlayerCount(); ++i)
+        {
+            if (i > 0)
+            {
+                ais[i] = new Odin(game, i);
+            }
+            else
+            {
+                ais[i] = new Siegfried(game, i);
+                ais[i].setFinder(shared);
+            }
+        }
+
+        while (game.isRunning()){
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            shared.findAreas();
+
             List<GameMove> moves = new ArrayList<GameMove>();
-            for (int i = 0; i < game.getPlayerCount(); ++i) {
-                GameMove move = testAI(game, game.getPlayer(i));
+            for (int i = 0; i < game.getPlayerCount(); ++i)
+            {
+                GameMove move = ais[i].decide(i);
                 moves.add(move);
             }
             game.tick(moves);
-            System.out.println(game.getState().getMap());
-
-            for (int i = 0; i < game.getPlayerCount(); ++i) {
-                if (game.getPlayer(i).isActive()) {
-                    System.out.print(" " + String.valueOf(i + 1));
-                }
-            }
-
-            this.game = game;
             this.repaint();
         }
     }

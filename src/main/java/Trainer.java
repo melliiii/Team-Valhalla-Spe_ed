@@ -29,15 +29,16 @@ public class Trainer
 
         inputCount = windowWidth*windowWidth + 3;// + player_count * 5;
 
-        population = new Population(
-                50 /* population size */,
-                inputCount /* network inputs */ ,
-                5 /* network outputs */,
-                30 /* max index of nodes */,
-                true /* recurrent */,
-                0.5 /* probability of connecting two nodes */
-        );
+        population = new Population("SavedPopulation.txt");
 
+        //population = new Population(
+        //        50 /* population size */,
+        //        inputCount /* network inputs */ ,
+        //        5 /* network outputs */,
+        //        20 /* max index of nodes */,
+        //        true /* recurrent */,
+        //        1 /* probability of connecting two nodes */
+        //);
     }
 
     public double[] generateInputs(Game game, Player player)
@@ -210,16 +211,20 @@ public class Trainer
             6. Evolution
         */
 
+        Random random = new Random();
+
         // Main loop iterations
         // i is the current iteration
         double last_avg = 0;
         double last_best = 0;
+        Stage stage = new Stage();
         for (int i = 0; i < iterations; ++i)
         {
             Vector neatOrgs = population.getOrganisms();
             int brainCount = neatOrgs.size();
             double fitness[] = new double[brainCount];
             double avg = 0;
+            double algo_avg = 0;
             for (int b = 0; b < brainCount; ++b)
             {
                 fitness[b] = 100000;
@@ -247,12 +252,18 @@ public class Trainer
                     }
 
                     // Create game
+                    List<Integer> brains = new ArrayList<Integer>();
                     List<String> names = new ArrayList<String>();
                     for (int p = 0; p < player_count; ++p)
                     {
                         names.add("Player " + String.valueOf(p));
+                        if (p > 0)
+                        {
+                            brains.add(random.nextInt(brainCount));
+                        }
                     }
-                    Game game = Game.create(30, 30, names);
+                    Game game = Game.create(50, 50, names);
+                    Siegfried sigi = new Siegfried(game, 5);
 
                     // Evaluation until game finishes
                     while(game.isRunning())
@@ -269,14 +280,24 @@ public class Trainer
                                 if (p == 0)
                                 {
                                     brain = ((Organism)neatOrgs.get(b)).getNet();
-                                    sum += game.getDeaths(); // game.getPlayer(p).getSpeed()
+                                    sum += Math.sqrt(game.getDeaths()); // game.getPlayer(p).getSpeed()
+                                    move = getBrainDecision(brain, game.getPlayer(p), game);
+                                    if (move == GameMove.turn_left || move == GameMove.turn_right)
+                                    {
+                                        sum+=Math.sqrt(game.getDeaths());
+                                    }
+                                }
+                                else if (p == 5)
+                                {
+                                    move = sigi.decide(0);
+                                    algo_avg+=Math.sqrt(game.getDeaths());
                                 }
                                 else
                                 {
-                                    int other = (b + p) % neatOrgs.size();
+                                    int other = brains.get(p-1);
                                     brain = ((Organism)neatOrgs.get(other)).getNet();
+                                    move = getBrainDecision(brain, game.getPlayer(p), game);
                                 }
-                                move = getBrainDecision(brain, game.getPlayer(p), game);
                                 moves.add(move);
                             }
                             else
@@ -296,6 +317,7 @@ public class Trainer
             }
 
             avg /= brainCount;
+            algo_avg /= (float)(brainCount * evaluationSteps);
 
             // Evolution
             double best = 0;
@@ -316,26 +338,32 @@ public class Trainer
             last_avg = avg;
             last_best = best;
 
-            System.out.println("\nIteration: " + i + "; current best: " + best + "; current avg: " + avg);
+            System.out.println("\nIteration: " + i + "; current best: " + best + "; current avg: " + avg + "; sigis avg: " + algo_avg);
 
             //if (dif > avg * 2 || i % 10 == 0)
             {
                 population.print_to_file_by_species("SavedPopulation.txt");
 
-                Stage stage = new Stage();
+                // Create game
+                List<Integer> brains = new ArrayList<Integer>();
                 List<String> names = new ArrayList<String>();
                 for (int p = 0; p < player_count; ++p)
                 {
                     names.add("Player " + String.valueOf(p));
+                    if (p > 0)
+                    {
+                        brains.add(random.nextInt(brainCount));
+                    }
                 }
 
-                int width = 30;
+                int width = 50;
                 if (i % 10 == 0)
                 {
-                    width = 50;
+                    width = 100;
                 }
 
                 Game game = Game.create(width, width, names);
+                Siegfried sigi = new Siegfried(game, 5);
                 stage.setGame(game);
 
                 while (game.isRunning())
@@ -352,13 +380,18 @@ public class Trainer
                             if (p == 0)
                             {
                                 brain = ((Organism)neatOrgs.get(bestbrain)).getNet();
+                                move = getBrainDecision(brain, game.getPlayer(p), game);
+                            }
+                            else if (p == 5)
+                            {
+                                move = sigi.decide(0);
                             }
                             else
                             {
-                                int other = (bestbrain + p) % neatOrgs.size();
+                                int other = brains.get(p-1);
                                 brain = ((Organism)neatOrgs.get(other)).getNet();
+                                move = getBrainDecision(brain, game.getPlayer(p), game);
                             }
-                            move = getBrainDecision(brain, game.getPlayer(p), game);
                             moves.add(move);
                         }
                         else {
@@ -371,10 +404,14 @@ public class Trainer
                     {
                         stage.repaint();
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(10);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    }
+                    else
+                    {
+                        stage = new Stage();
                     }
                 }
             }

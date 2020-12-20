@@ -35,6 +35,18 @@ public class Player implements Cloneable
         return state.direction;
     }
 
+    public int getNextX()
+    {
+        int[] dxy = Game.direction2Delta(getDirection());
+        return getX() + dxy[0];
+    }
+
+    public int getNextY()
+    {
+        int[] dxy = Game.direction2Delta(getDirection());
+        return getY() + dxy[1];
+    }
+
     public void setDirection(Direction direction) {
         state.direction = direction;
     }
@@ -61,6 +73,13 @@ public class Player implements Cloneable
 
     public void setName(String name) {
         state.name = name;
+    }
+
+    public double getDistanceTo(Player other)
+    {
+        double dx = this.getX() - other.getX();
+        double dy = this.getY() - other.getY();
+        return Math.sqrt(dx*dx+dy*dy);
     }
 
     @Override

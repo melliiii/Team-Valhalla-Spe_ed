@@ -172,7 +172,7 @@
 		 p_compat_threshold = 0.1;
 		 p_age_significance = 0.25;
 		 p_survival_thresh = 90;
-		 p_mutate_only_prob = 0.5;
+		 p_mutate_only_prob = 1.0;
 		 p_mutate_random_trait_prob = 0.25;
 		 p_mutate_link_trait_prob = 0.25;
 		 p_mutate_node_trait_prob = 0.25;
@@ -182,10 +182,10 @@
 		 p_mutate_add_node_prob = 0.25;
 		 p_mutate_add_link_prob = 0.25;
 		 p_interspecies_mate_rate = 0.25;
-		 p_mate_multipoint_prob = 0.25;
-		 p_mate_multipoint_avg_prob = 0.25;
-		 p_mate_singlepoint_prob = 0.25;
-		 p_mate_only_prob = 0.25;
+		 p_mate_multipoint_prob = 0.0;
+		 p_mate_multipoint_avg_prob = 0.0;
+		 p_mate_singlepoint_prob = 0.0;
+		 p_mate_only_prob = 0.0;
 		 p_recur_only_prob = 0;
 		 p_pop_size = 50;
 		 p_dropoff_age = 1;

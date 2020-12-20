@@ -36,10 +36,15 @@ public class WebSocketListener extends WebSocketAdapter {
 
     @Override
     public void onError(WebSocket websocket, WebSocketException exception) throws WebSocketException {
+        LOGGER.log(Level.SEVERE, "ERROR");
+        exception.printStackTrace();
+
+
+        WebBridge.shutdown(427);
+
         // Error handling on websocket
         if (exception.getMessage().contains("427")) {
             LOGGER.log(Level.SEVERE, "Already connected");
-            WebBridge.shutdown(427);
         } else {
             throw exception;
         }
@@ -47,6 +52,6 @@ public class WebSocketListener extends WebSocketAdapter {
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) {
-        // TODO Handle Connect??? MAYBE??? Works either way so prob. not :P
+        LOGGER.log(Level.INFO, "Connected!");
     }
 }

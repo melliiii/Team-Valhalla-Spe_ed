@@ -54,7 +54,16 @@ public class Game implements Cloneable
     public Game clone()
     {
         GameState s = new GameState();
-        s.cells = state.cells.clone();
+
+        s.cells = new int[getHeight()][getWidth()];
+        for (int y = 0; y < getHeight(); ++y)
+        {
+            for (int x = 0; x < getWidth(); ++x)
+            {
+                s.cells[y][x] = getCells()[y][x];
+            }
+        }
+
         s.deadline = state.deadline;
         s.height = state.height;
         s.width = state.width;
@@ -84,7 +93,7 @@ public class Game implements Cloneable
         {
             // Return nothing
             // TODO: Exception?
-            return null;
+            return result;
         }
 
         result.tick(moves);
@@ -299,6 +308,11 @@ public class Game implements Cloneable
         return players.get(id);
     }
 
+    public int getPlayerID(Player p)
+    {
+        return players.indexOf(p);
+    }
+
     public int getPlayerCount()
     {
         return players.size();
@@ -322,5 +336,10 @@ public class Game implements Cloneable
 
     public void setDeadline(Date deadline) {
         state.deadline = deadline;
+    }
+
+    public boolean positionExists(int px, int py)
+    {
+        return (px < getWidth() && px >= 0 && py < getHeight() && py >= 0);
     }
 }
