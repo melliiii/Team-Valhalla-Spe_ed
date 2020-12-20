@@ -35,7 +35,7 @@ public class WebBridge {
     static GameState gameState;
     public static GameMove nextGameMove = GameMove.change_nothing;
     public static boolean gameMove_changed = false;
-    public static Stage stage = new Stage();
+    public static Stage stage = new Stage(false);
     public static AlgorithmicAI ai;
 
     public static void loop() {

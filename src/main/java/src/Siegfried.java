@@ -1,4 +1,4 @@
-import java.util.Random;
+package src;
 
 public class Siegfried extends AlgorithmicAI
 {

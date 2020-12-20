@@ -245,7 +245,7 @@ public class Trainer extends Thread implements SafeThread
                         names.add("Player " + String.valueOf(p));
                         if (p > 0)
                         {
-                            brains.add(random.nextInt(brainCount));
+                            brains.add(Stage.random.nextInt(brainCount));
                         }
                     }
                     Game game = Game.create(50, 50, names);
@@ -329,7 +329,7 @@ public class Trainer extends Thread implements SafeThread
             DecimalFormat df = new DecimalFormat("###.##");
             System.out.println("\nIteration: " + i + "; current best: " + best + "; current avg: " + avg + "; sigis avg: " + algo_avg);
 
-            if(GUI_MODE && current_iteration % 10 == 0)
+            if(GUI_MODE && i % 10 == 0)
             {
                 population.print_to_file_by_species("SavedPopulation.txt");
 
@@ -341,7 +341,7 @@ public class Trainer extends Thread implements SafeThread
                     names.add("Player " + String.valueOf(p));
                     if (p > 0)
                     {
-                        brains.add(random.nextInt(brainCount));
+                        brains.add(Stage.random.nextInt(brainCount));
                     }
                 }
 
@@ -398,7 +398,7 @@ public class Trainer extends Thread implements SafeThread
                 }
             }
 
-            if(running) population.epoch(current_iteration);
+            if(running) population.epoch(i);
             else return;
         }
     }

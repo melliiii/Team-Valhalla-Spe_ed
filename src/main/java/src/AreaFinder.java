@@ -1,3 +1,7 @@
+package src;
+
+import src.Game;
+
 public class AreaFinder
 {
     private Clump[][] collected;

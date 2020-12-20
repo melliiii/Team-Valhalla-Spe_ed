@@ -1,3 +1,5 @@
+package src;
+
 import java.util.Arrays;
 
 public class Odin extends AlgorithmicAI
@@ -23,7 +25,15 @@ public class Odin extends AlgorithmicAI
         {
             GameMove move = options[m];
             moves[playerId] = move;
-            Game next = current.variant(Arrays.asList(moves.clone()));
+            Game next = null;
+            try
+            {
+                next = current.variant(Arrays.asList(moves.clone()));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             double eval = evaluate(next, playerId);
 
             if (eval > max / 2 && depth > 0)

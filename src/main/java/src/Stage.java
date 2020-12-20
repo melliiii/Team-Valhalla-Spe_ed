@@ -113,7 +113,7 @@ public class Stage extends JPanel implements KeyListener
 
         Game game = Game.create(80, 80, names);
         this.game = game;
-        //finder = new AreaFinder(game);
+        //finder = new src.AreaFinder(game);
 
         JFrame frame = new JFrame(title);
         frame.add(this);
@@ -232,7 +232,7 @@ public class Stage extends JPanel implements KeyListener
     public void setGame(Game game)
     {
         this.game = game;
-        //finder = new AreaFinder(game);
+        //finder = new src.AreaFinder(game);
     }
 
     public void loop()

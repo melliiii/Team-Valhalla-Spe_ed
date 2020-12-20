@@ -1,4 +1,5 @@
-import java.awt.geom.Area;
+package src;
+
 import java.util.*;
 
 class DistanceComparator implements Comparator<Player>
@@ -54,7 +55,15 @@ public class Brunhilde extends AlgorithmicAI
                 }
             }
 
-            Game next = current.variant(Arrays.asList(possible[o].clone()));
+            Game next = null;
+            try
+            {
+                next = current.variant(Arrays.asList(possible[o].clone()));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             finder.setGame(next);
             finder.findAreas();
             double eval = evaluate(next, playerId);
