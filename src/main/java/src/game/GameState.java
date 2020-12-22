@@ -1,4 +1,4 @@
-package src;
+package src.game;
 
 import java.util.Date;
 import java.util.Map;

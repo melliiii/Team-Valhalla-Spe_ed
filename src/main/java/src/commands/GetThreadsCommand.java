@@ -1,7 +1,7 @@
 package src.commands;
 
 import src.Main;
-import src.SafeThread;
+import src.threads.SafeThread;
 
 public class GetThreadsCommand implements Command{
     @Override

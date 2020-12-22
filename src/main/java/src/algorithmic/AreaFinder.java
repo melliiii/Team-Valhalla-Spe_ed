@@ -1,6 +1,6 @@
-package src;
+package src.algorithmic;
 
-import src.Game;
+import src.game.Game;
 
 public class AreaFinder
 {

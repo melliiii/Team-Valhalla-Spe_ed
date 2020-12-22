@@ -1,6 +1,6 @@
-package src;
+package src.game;
 
-import src.Direction;
+import src.game.Direction;
 
 public class PlayerState {
     public int ID = 0;
@@ -12,5 +12,5 @@ public class PlayerState {
     public int speed = 0;
     public boolean active = false;
 
-    public String name = "src.Player";
+    public String name = "src.game.Player";
 }

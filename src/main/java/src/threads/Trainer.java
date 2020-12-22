@@ -1,10 +1,15 @@
-package src;
+package src.threads;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import src.algorithmic.Siegfried;
+import src.game.Direction;
+import src.game.Game;
+import src.game.GameMove;
+import src.game.Player;
 import src.jneat.*;
 
 
@@ -105,10 +110,10 @@ public class Trainer extends Thread implements SafeThread
         }
 
         // Self first
-        //result[i+0] = player.getDirection() == src.Direction.up ? 1 : 0;
-        //result[i+1] = player.getDirection() == src.Direction.left ? 1 : 0;
-        //result[i+2] = player.getDirection() == src.Direction.down ? 1 : 0;
-        //result[i+3] = player.getDirection() == src.Direction.right ? 1 : 0;
+        //result[i+0] = player.getDirection() == src.game.Direction.up ? 1 : 0;
+        //result[i+1] = player.getDirection() == src.game.Direction.left ? 1 : 0;
+        //result[i+2] = player.getDirection() == src.game.Direction.down ? 1 : 0;
+        //result[i+3] = player.getDirection() == src.game.Direction.right ? 1 : 0;
         result[i] = player.getSpeed();
 
         ++i;

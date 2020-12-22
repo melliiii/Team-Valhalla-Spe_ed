@@ -1,4 +1,13 @@
-package src;
+package src.threads;
+
+import src.algorithmic.AlgorithmicAI;
+import src.algorithmic.AreaFinder;
+import src.algorithmic.Odin;
+import src.algorithmic.Siegfried;
+import src.game.Direction;
+import src.game.Game;
+import src.game.GameMove;
+import src.game.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,7 +122,7 @@ public class Stage extends JPanel implements KeyListener
 
         Game game = Game.create(80, 80, names);
         this.game = game;
-        //finder = new src.AreaFinder(game);
+        //finder = new src.ai.AreaFinder(game);
 
         JFrame frame = new JFrame(title);
         frame.add(this);
@@ -218,7 +227,7 @@ public class Stage extends JPanel implements KeyListener
 
         if (cell == game.getYou())
         {
-            result =  new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+            result =  Color.white;// Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
         }
 
         return result;
@@ -232,7 +241,7 @@ public class Stage extends JPanel implements KeyListener
     public void setGame(Game game)
     {
         this.game = game;
-        //finder = new src.AreaFinder(game);
+        //finder = new src.ai.AreaFinder(game);
     }
 
     public void loop()

@@ -1,4 +1,7 @@
-package src;
+package src.algorithmic;
+
+import src.game.Game;
+import src.game.GameMove;
 
 import java.util.Arrays;
 
@@ -14,7 +17,7 @@ public class Odin extends AlgorithmicAI
         double max = currentBest;
         int best = 0;
         GameMove[] options = getOptions();
-        GameMove[] moves = new GameMove[6];
+        GameMove[] moves = new GameMove[current.getPlayerCount()];
 
         for (int p = 0; p < current.getPlayerCount(); ++p)
         {
@@ -36,11 +39,10 @@ public class Odin extends AlgorithmicAI
             }
             double eval = evaluate(next, playerId);
 
-            if (eval > max / 2 && depth > 0)
+            if (eval > max * 0.25 && depth > 0)
             {
                 eval = maximax(next, max, depth-1)[0].doubleValue();
             }
-
             if (eval > max)
             {
                 max = eval;

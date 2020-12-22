@@ -1,7 +1,7 @@
 package src.commands;
 
 import src.Main;
-import src.SafeThread;
+import src.threads.SafeThread;
 
 public class StopCommand implements Command{
     @Override

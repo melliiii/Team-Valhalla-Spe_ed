@@ -1,8 +1,11 @@
-package src;
+package src.threads;
+
+import src.commands.CommandManager;
 
 import java.util.Scanner;
 
-public class ConsoleListenerThread extends Thread implements SafeThread {
+public class ConsoleListenerThread extends Thread implements SafeThread
+{
     private boolean running = true;
     @Override
     public void run() {

@@ -1,4 +1,4 @@
-package src;
+package src.game;
 
 public class Player implements Cloneable
 {

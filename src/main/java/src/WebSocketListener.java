@@ -3,6 +3,7 @@ package src;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
+import src.threads.WebBridge;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,8 @@ public class WebSocketListener extends WebSocketAdapter {
 
     // Initialize Logger
     private static Logger LOGGER = null;
+    private WebBridge bridge;
+
     static {
         InputStream stream = WebBridge.class.getClassLoader().
                 getResourceAsStream("logging.properties");
@@ -28,12 +31,17 @@ public class WebSocketListener extends WebSocketAdapter {
         }
     }
 
+    public WebSocketListener(WebBridge bridge)
+    {
+        super();
+        this.bridge = bridge;
+    }
 
     @Override
     public void onTextMessage(WebSocket websocket, String message) {
         // fired when a text is received
         // lets just pass that on to the main class
-        WebBridge.handleMessage(websocket, message);
+        bridge.handleMessage(websocket, message);
     }
 
     @Override
@@ -42,7 +50,7 @@ public class WebSocketListener extends WebSocketAdapter {
         exception.printStackTrace();
 
 
-        WebBridge.shutdown(427);
+        bridge.shutdown(427);
 
         // Error handling on websocket
         if (exception.getMessage().contains("427")) {

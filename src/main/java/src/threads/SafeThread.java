@@ -1,4 +1,4 @@
-package src;
+package src.threads;
 
 public interface SafeThread {
     boolean isRunning();

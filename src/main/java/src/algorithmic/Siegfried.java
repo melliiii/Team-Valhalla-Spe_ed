@@ -1,4 +1,9 @@
-package src;
+package src.algorithmic;
+
+import src.algorithmic.AlgorithmicAI;
+import src.game.Game;
+import src.game.GameMove;
+import src.game.Player;
 
 public class Siegfried extends AlgorithmicAI
 {
@@ -25,7 +30,7 @@ public class Siegfried extends AlgorithmicAI
 
         // Collect some data to decide upon
         int[] dxy = Game.direction2Delta(player.getDirection());
-        double nextPlayer = nextPlayerDistance(player);
+        double nextPlayer = nextPlayerDistance(game, player);
 
         int max = -1;
 

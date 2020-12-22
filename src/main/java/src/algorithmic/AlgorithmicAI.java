@@ -1,6 +1,27 @@
-package src;
+package src.algorithmic;
+
+import src.game.Direction;
+import src.game.Game;
+import src.game.GameMove;
+import src.game.Player;
 
 import java.util.*;
+
+class DistanceComparator implements Comparator<Player>
+{
+    private Player main;
+    public DistanceComparator(Player main)
+    {
+        this.main = main;
+    }
+    @Override
+    public int compare(Player o1, Player o2)
+    {
+        double d1 = main.getDistanceTo(o1);
+        double d2 = main.getDistanceTo(o2);
+        return Double.compare(d1, d2);
+    }
+}
 
 public abstract class AlgorithmicAI
 {
@@ -62,12 +83,12 @@ public abstract class AlgorithmicAI
         return counter;
     }
 
-    public double nextPlayerDistance(Player player)
+    public double nextPlayerDistance(Game current, Player player)
     {
         double nextPlayer = 100000;
-        for (int p = 0; p < game.getPlayerCount(); ++p)
+        for (int p = 0; p < current.getPlayerCount(); ++p)
         {
-            Player other = game.getPlayer(p);
+            Player other = current.getPlayer(p);
             if (other != player && other.isActive())
             {
                 double dx = player.getX() - other.getX();
@@ -120,9 +141,10 @@ public abstract class AlgorithmicAI
             }
         }
 
-        score /= enemySum * 0.1 + 1.0;
-        score /= (double)getMainEnemies(current, playerId).size() * 1.0 + 1.0;
-
+        //score /= enemySum * 0.5 + 1.0;
+        int mainEnem = getMainEnemies(current, playerId).size();
+        score /= (double)mainEnem * 1.0 + 1.0;
+        //score *= Math.pow(nextPlayerDistance(current, player) / (double) current.getWidth(), 5);
         return score;
     }
 

@@ -1,4 +1,4 @@
-package src;
+package src.game;
 
 import java.util.*;
 
@@ -53,7 +53,7 @@ public class Game implements Cloneable
         return new Game(s, 0);
     }
 
-    // Creates a deep clone of this src.Game
+    // Creates a deep clone of this src.game.Game
     public Game cloneGame()
     {
         GameState s = new GameState();
@@ -81,7 +81,7 @@ public class Game implements Cloneable
         return new Game(s, ticks);
     }
 
-    // Perform a move for every player. Returns a new src.Game (deep copy)
+    // Perform a move for every player. Returns a new src.game.Game (deep copy)
     public Game variant(List<GameMove> moves) throws Exception {
         Game result = cloneGame();
 

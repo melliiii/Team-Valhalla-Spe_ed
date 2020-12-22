@@ -1,4 +1,4 @@
-package src;
+package src.commands;
 
 import src.commands.*;
 

@@ -1,22 +1,10 @@
-package src;
+package src.algorithmic;
+
+import src.game.Game;
+import src.game.GameMove;
+import src.game.Player;
 
 import java.util.*;
-
-class DistanceComparator implements Comparator<Player>
-{
-    private Player main;
-    public DistanceComparator(Player main)
-    {
-        this.main = main;
-    }
-    @Override
-    public int compare(Player o1, Player o2)
-    {
-        double d1 = main.getDistanceTo(o1);
-        double d2 = main.getDistanceTo(o2);
-        return Double.compare(d1, d2);
-    }
-}
 
 public class Brunhilde extends AlgorithmicAI
 {

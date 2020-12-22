@@ -1,10 +1,16 @@
-package src;
+package src.threads;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import src.*;
+import src.algorithmic.AlgorithmicAI;
+import src.algorithmic.Odin;
+import src.game.Game;
+import src.game.GameMove;
+import src.game.GameState;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +18,10 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class WebBridge {
+public class WebBridge implements SafeThread
+{
     // WSS Information TODO: Move to config file
-    private final static String url = "wss://msoll.de/spe_ed?key=A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM";
+    private final static String url = "wss://yellowphoenix18.de:555/valhalla";//"wss://msoll.de/spe_ed?key=A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM";
     private final static int expected_ping = 60;
 
     // Initialize Logger
@@ -31,36 +38,15 @@ public class WebBridge {
         }
     }
 
-    static WebSocket websocket;
-    static GameState gameState;
-    public static GameMove nextGameMove = GameMove.change_nothing;
-    public static boolean gameMove_changed = false;
-    public static Stage stage = new Stage(false);
-    public static AlgorithmicAI ai;
+    private WebSocket websocket;
+    private GameState gameState;
+    private GameMove nextGameMove = GameMove.change_nothing;
+    private boolean gameMove_changed = false;
+    private Stage stage = new Stage(false);
+    private AlgorithmicAI ai;
+    private int ticks = 0;
 
-    public static void loop() {
-        try {
-            // Create Websocket and connect
-            websocket = new WebSocketFactory()
-                    .createSocket(url)
-                    .addListener(new WebSocketListener())
-                    .connect();
-
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-            WebBridge.shutdown(1);
-        } catch (WebSocketException e) {
-            // WebSocketException, also look into src.WebSocketListener!!!
-            if (e.getMessage().contains("101")){
-                LOGGER.log(Level.SEVERE, "Cannot connect to Server!");
-                WebBridge.shutdown(101);
-            }
-            LOGGER.log(Level.SEVERE, e.getMessage());
-            shutdown(1);
-        }
-    }
-
-    public static void handleMessage(WebSocket websocket, String message) {
+    public void handleMessage(WebSocket websocket, String message) {
         // New Gson Object
         Gson gson = new Gson();
 
@@ -73,7 +59,8 @@ public class WebBridge {
             return;
         }
 
-        Game g = new Game(gameState, 0);
+        Game g = new Game(gameState, ticks);
+        ++ticks;
         if (ai == null)
         {
             LOGGER.log(Level.INFO, "Game started");
@@ -90,7 +77,7 @@ public class WebBridge {
         //gameMove_changed = false;
 
         ai.setGame(g);
-        nextGameMove = ai.decide(1);
+        nextGameMove = ai.decide(5);
 
         LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
 
@@ -123,7 +110,7 @@ public class WebBridge {
     }
 
     // Clean Shutdown
-    public static void shutdown(int status){
+    public void shutdown(int status){
         if(websocket != null){
             // If Websocket is still connected, disconnect and destroy object
             websocket.disconnect();
@@ -131,5 +118,42 @@ public class WebBridge {
         }
         LOGGER.log(Level.INFO, "Shutting down...");
         System.exit(status);
+    }
+
+    @Override
+    public boolean isRunning()
+    {
+        return websocket != null;
+    }
+
+    @Override
+    public void terminate()
+    {
+        shutdown(1);
+    }
+
+    @Override
+    public void start()
+    {
+        try
+        {
+            // Create Websocket and connect
+            websocket = new WebSocketFactory()
+                    .createSocket(url)
+                    .addListener(new WebSocketListener(this))
+                    .connect();
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            shutdown(1);
+        } catch (WebSocketException e) {
+            // WebSocketException, also look into src.WebSocketListener!!!
+            if (e.getMessage().contains("101")){
+                LOGGER.log(Level.SEVERE, "Cannot connect to Server!");
+                shutdown(101);
+            }
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            shutdown(1);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package src;
+package src.algorithmic;
 
 import java.util.*;
 

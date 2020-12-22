@@ -1,7 +1,10 @@
 package src.commands;
 
 import src.*;
-import src.threads.WebBridgeThread;
+import src.threads.SafeThread;
+import src.threads.Stage;
+import src.threads.Trainer;
+import src.threads.WebBridge;
 
 public class StartCommand implements Command {
 
@@ -11,7 +14,7 @@ public class StartCommand implements Command {
         {
             if (args[0].contains("live"))
             {
-                WebBridgeThread webBridgeThread = new WebBridgeThread();
+                WebBridge webBridgeThread = new WebBridge();
                 Main.startThread(webBridgeThread);
             }
             else if (args[0].contains("stage"))
