@@ -4,36 +4,26 @@ import src.game.Game;
 
 public class AreaFinder
 {
-    private Clump[][] collected;
+    private Clump[][][] collected;
     private Game game;
-
-    /*
-    * How to enable dynamic connection managing
-    * 1. Dont delete nodes. Just deactivate them.
-    * 2. If two active nodes are connected,
-    *    their parents are connected, too
-    * 3. If a node is connected to an inactive node,
-    *    their parent is inactive, too
-    *    But how?
-    *
-    * */
 
     public AreaFinder(Game game)
     {
         this.game = game;
-        collected = new Clump[game.getHeight()][game.getWidth()];
+        collected = new Clump[1][][];
+        collected[0] = new Clump[game.getHeight()][game.getWidth()];
         Clump.initialCapacity = game.getWidth() * game.getHeight();
     }
 
-    private void connectAt(int x, int y)
+    private void connectAt(int c, int x, int y)
     {
-        if (x > 0 && collected[y][x - 1] != null)
+        if (x > 0 && collected[c][y][x - 1] != null)
         {
-            Clump.merge(collected[y][x], collected[y][x - 1]);
+            Clump.merge(collected[c][y][x], collected[0][y][x - 1]);
         }
-        if (y > 0 && collected[y - 1][x] != null)
+        if (y > 0 && collected[c][y - 1][x] != null)
         {
-            Clump.merge(collected[y][x], collected[y - 1][x]);
+            Clump.merge(collected[c][y][x], collected[c][y - 1][x]);
         }
     }
 
@@ -42,34 +32,59 @@ public class AreaFinder
         this.game = g;
     }
 
+    public int countConnections(int c, int x, int y)
+    {
+        int counter = 0;
+        for (int i = 0; i < 4; ++i)
+        {
+            int[] dxy = Game.direction2Delta(Game.int2Direction(i));
+            if (    game.positionExists(x+dxy[0], y+dxy[1]) &&
+                    collected[c][y+dxy[1]][x+dxy[0]] != null)
+            {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     public void findAreas()
+    {
+        findAreas(0);
+    }
+    public void findAreas(int c)
     {
         for (int x = 0; x < game.getWidth(); ++x)
         {
             for (int y = 0; y < game.getHeight(); ++y)
             {
-                if (collected[y][x] == null && game.getCells()[y][x] == 0)
+                if (collected[c][y][x] == null && game.getCells()[y][x] == 0)
                 {
-                    collected[y][x] = new Clump(0);
-                    collected[y][x].setLeafCount(1);
+                    collected[c][y][x] = new Clump(0);
+                    collected[c][y][x].setLeafCount(1);
                 }
                 else if (game.getCells()[y][x] == 0)
                 {
-                    collected[y][x].clear();
-                    collected[y][x].setLeafCount(1);
+                    collected[c][y][x].clear();
+                    collected[c][y][x].setLeafCount(1);
                 }
                 else {
-                    collected[y][x] = null;
+                    collected[c][y][x] = null;
                 }
             }
         }
-        for (int x = 0; x < game.getWidth(); ++x)
+        for (int i = 4; i > 0; --i)
         {
-            for (int y = 0; y < game.getHeight(); ++y)
+            for (int x = 0; x < game.getWidth(); ++x)
             {
-                if (game.getCells()[y][x] == 0)
+                for (int y = 0; y < game.getHeight(); ++y)
                 {
-                    connectAt(x, y);
+                    if (countConnections(c, x, y) != i)
+                    {
+                        if (game.getCells()[y][x] == 0)
+                        {
+                            connectAt(c, x, y);
+                        }
+                    }
                 }
             }
         }
@@ -77,7 +92,7 @@ public class AreaFinder
 
     public Clump[][] getCollected()
     {
-        return collected;
+        return collected[0];
     }
 
     public int getAreaAt(int px, int py)
@@ -95,10 +110,10 @@ public class AreaFinder
         {
             return null;
         }
-        if (collected == null || collected[py][px] == null)
+        if (collected == null || collected[0][py][px] == null)
         {
             return null;
         }
-        return collected[py][px].getLastParent();
+        return collected[0][py][px].getLastParent();
     }
 }

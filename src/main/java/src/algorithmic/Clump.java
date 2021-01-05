@@ -8,7 +8,6 @@ public class Clump
     private Clump parent;
     private int leafCount;
     private Set<Clump> children;
-    private Object data;
     private int id;
     public static int initialCapacity;
 
@@ -18,7 +17,6 @@ public class Clump
         parent = null;
         leafCount = 0;
         children = new HashSet<>(layer > 0 ? initialCapacity : 0);
-        data = null;
         id = 0;
     }
 
@@ -27,7 +25,6 @@ public class Clump
         this.layer = 0;
         parent = null;
         leafCount = 0;
-        data = null;
         id = 0;
     }
 
@@ -53,14 +50,6 @@ public class Clump
 
     public Set<Clump> getChildren() {
         return children;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
     }
 
     public int getId() {
@@ -104,6 +93,17 @@ public class Clump
             parent.setLeafCount(parent.getLeafCount() + leafCount);
         }
     }
+
+    public int getDepth()
+    {
+        int depth = 0;
+        if (parent == null)
+        {
+            return depth;
+        }
+        return parent.getLastParent().getDepth()+1;
+    }
+
 
     public Clump getLastParent()
     {

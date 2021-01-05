@@ -141,7 +141,7 @@ public abstract class AlgorithmicAI
             }
         }
 
-        //score /= enemySum * 0.5 + 1.0;
+        //score -= enemySum / 100.0;
         int mainEnem = getMainEnemies(current, playerId).size();
         score /= (double)mainEnem * 1.0 + 1.0;
         //score *= Math.pow(nextPlayerDistance(current, player) / (double) current.getWidth(), 5);

@@ -19,7 +19,7 @@ public class StartCommand implements Command {
             }
             else if (args[0].contains("stage"))
             {
-                Stage stage = new Stage(true);
+                Stage stage = new Stage(false);
                 stage.loop();
             }
             else if (args[0].contains("trainer"))

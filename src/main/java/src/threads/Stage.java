@@ -1,9 +1,6 @@
 package src.threads;
 
-import src.algorithmic.AlgorithmicAI;
-import src.algorithmic.AreaFinder;
-import src.algorithmic.Odin;
-import src.algorithmic.Siegfried;
+import src.algorithmic.*;
 import src.game.Direction;
 import src.game.Game;
 import src.game.GameMove;
@@ -122,7 +119,7 @@ public class Stage extends JPanel implements KeyListener
 
         Game game = Game.create(80, 80, names);
         this.game = game;
-        //finder = new src.ai.AreaFinder(game);
+        finder = new AreaFinder(game);
 
         JFrame frame = new JFrame(title);
         frame.add(this);
@@ -146,6 +143,7 @@ public class Stage extends JPanel implements KeyListener
         names.add("Sauron");
 
         this.game = Game.create(50, 50, names);
+        finder = new AreaFinder(game);
 
         JFrame frame = new JFrame("src/gui");
         frame.add(this);
@@ -177,7 +175,7 @@ public class Stage extends JPanel implements KeyListener
                 {
                     if (finder.getCollected()[y][x] != null)
                     {
-                        float scale = (float)finder.getCollected()[y][x].getLastParent().getLeafCount() / (float)(game.getWidth() * game.getHeight());
+                        float scale = (float)finder.getAreaAt(x, y) / (float)(game.getWidth() * game.getHeight());
                         scale = (float)Math.sqrt(Math.sqrt(scale));
                         g.setColor(new Color(1.0f-scale, scale, 0.0f));
                     }
@@ -241,7 +239,7 @@ public class Stage extends JPanel implements KeyListener
     public void setGame(Game game)
     {
         this.game = game;
-        //finder = new src.ai.AreaFinder(game);
+        finder = new AreaFinder(game);
     }
 
     public void loop()
@@ -250,14 +248,15 @@ public class Stage extends JPanel implements KeyListener
         AlgorithmicAI[] ais = new AlgorithmicAI[game.getPlayerCount()];
         for (int i = 0; i < game.getPlayerCount(); ++i)
         {
-            if (i > 0)
+            if (false && i > 0)
             {
                 ais[i] = new Odin(game, i);
             }
             else
             {
-                ais[i] = new Siegfried(game, i);
-                ais[i].setFinder(shared);
+                ais[i] = new Thor(game, i);
+                //ais[i] = new Siegfried(game, i);
+                //ais[i].setFinder(shared);
             }
         }
 
