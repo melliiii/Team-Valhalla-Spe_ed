@@ -25,7 +25,7 @@ class DistanceComparator implements Comparator<Player>
 
 public abstract class AlgorithmicAI
 {
-    protected Random random;
+    protected static Random random;
     protected AreaFinder finder;
     protected boolean shared;
 
@@ -68,7 +68,112 @@ public abstract class AlgorithmicAI
         };
     }
 
-    public int lookAhead(int px, int py, Direction d)
+    public enum RandomMethod
+    {
+        equal,
+        equal_cn_first,
+        weighted,
+        weighted_cn_first,
+        equal_allow_death,
+        bot_look_ahead
+    }
+
+    public static GameMove botLookAhead(Game game, int playerId)
+    {
+        GameMove[] options = new GameMove[]{GameMove.turn_right, GameMove.change_nothing, GameMove.turn_left};
+        Player p = game.getPlayer(playerId);
+        int max = 0;
+        GameMove result = GameMove.change_nothing;
+        int head = (Game.direction2Int(p.getDirection()) + 3) % 4;
+        for (int i = 0; i < 3; ++i)
+        {
+            int eval = lookAhead(game, p.getX(), p.getY(), Game.int2Direction(head));
+            if (eval > max)
+            {
+                max = eval;
+                result = options[i];
+            }
+            head += 1;
+            head %= 4;
+        }
+
+        if (result == GameMove.change_nothing && p.getSpeed() > 1)
+        {
+            result = GameMove.slow_down;
+        }
+
+        return result;
+    }
+
+    public static GameMove randomMove(Game game, int playerId, RandomMethod randomMethod)
+    {
+        if (randomMethod == RandomMethod.bot_look_ahead)
+        {
+            return botLookAhead(game, playerId);
+        }
+        GameMove[] options = new GameMove[]{GameMove.change_nothing, GameMove.turn_right, GameMove.turn_left, GameMove.slow_down, GameMove.speed_up};
+
+        Player player = game.getPlayer(playerId);
+        List<GameMove> goodOptions = new ArrayList<>();
+
+        for (int i = 0; i < 5; ++i)
+        {
+            if (randomMethod == RandomMethod.equal_allow_death || !game.isDeadlyMove(playerId, options[i]))
+            {
+                goodOptions.add(options[i]);
+            }
+        }
+
+        if(goodOptions.size() > 0)
+        {
+            if ((   randomMethod == RandomMethod.equal_cn_first ||
+                    randomMethod == RandomMethod.weighted_cn_first ) &&
+                    goodOptions.get(0) == GameMove.change_nothing )
+            {
+                return GameMove.change_nothing;
+            }
+
+            int index = random.nextInt(goodOptions.size());
+            if (    randomMethod == RandomMethod.equal ||
+                    randomMethod == RandomMethod.equal_cn_first ||
+                    randomMethod == RandomMethod.equal_allow_death)
+            {
+                return goodOptions.get(index);
+            }
+
+            double v = random.nextDouble();
+            if (v < 0.8 && goodOptions.contains(GameMove.change_nothing))
+            {
+                return GameMove.change_nothing;
+            }
+            if (v < 0.875 && goodOptions.contains(GameMove.turn_left))
+            {
+                return GameMove.turn_left;
+            }
+            if (v < 0.95 && goodOptions.contains(GameMove.turn_right))
+            {
+                return GameMove.turn_right;
+            }
+            if (v < 0.99 && goodOptions.contains(GameMove.slow_down))
+            {
+                return GameMove.slow_down;
+            }
+            return GameMove.speed_up;
+        }
+        return GameMove.change_nothing;
+    }
+
+    public static double playRandomGame(Game g, int playerId, RandomMethod randomMethod)
+    {
+        while(g.isRunning())
+        {
+            int index = g.getCurrentPlayer();
+            g.performMove(randomMove(g, index, randomMethod));
+        }
+        return (double) (g.getDeath(playerId)) / g.getPlayerCount();
+    }
+
+    public static int lookAhead(Game game, int px, int py, Direction d)
     {
         int[] dxy = Game.direction2Delta(d);
         int x = px + dxy[0];
@@ -101,53 +206,6 @@ public abstract class AlgorithmicAI
         return nextPlayer;
     }
 
-    public double evaluate(Game current, int playerId)
-    {
-        Player player = current.getPlayer(playerId);
-        if (!player.isActive())
-        {
-            return 0;
-        }
-        finder.setGame(current);
-        finder.findAreas();
-
-        double score = 0;
-        double enemySum = 0;
-
-        for (int p = 0; p < current.getPlayerCount(); ++p)
-        {
-            Player pl = current.getPlayer(p);
-            int max = 0;
-            for (int i = 0; i < 4; ++i)
-            {
-                Direction dir = Game.int2Direction(i);
-                int[] dxy = Game.direction2Delta(dir);
-                int x = pl.getX() + dxy[0];
-                int y = pl.getY() + dxy[1];
-                if (current.positionExists(x, y))
-                {
-                    int eval = finder.getAreaAt(x, y);
-                    max = Math.max(max, eval);
-                }
-            }
-
-            if (p == playerId)
-            {
-                score += max;
-            }
-            else
-            {
-                enemySum += max;
-            }
-        }
-
-        //score -= enemySum / 100.0;
-        int mainEnem = getMainEnemies(current, playerId).size();
-        score /= (double)mainEnem * 1.0 + 1.0;
-        //score *= Math.pow(nextPlayerDistance(current, player) / (double) current.getWidth(), 5);
-        return score;
-    }
-
     public SortedSet<Player> getMainEnemies(Game current, int playerId)
     {
         Player player = current.getPlayer(playerId);
@@ -170,5 +228,5 @@ public abstract class AlgorithmicAI
         return result;
     }
 
-    public abstract GameMove decide(int depth);
+    public abstract GameMove decide();
 }

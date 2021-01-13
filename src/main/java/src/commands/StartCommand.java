@@ -1,10 +1,7 @@
 package src.commands;
 
 import src.*;
-import src.threads.SafeThread;
-import src.threads.Stage;
-import src.threads.Trainer;
-import src.threads.WebBridge;
+import src.threads.*;
 
 public class StartCommand implements Command {
 
@@ -35,7 +32,7 @@ public class StartCommand implements Command {
                 }
 
                 System.out.println("Starting trainer....");
-                Trainer trainer = new Trainer(15, 6, 500, 10);
+                Trainer trainer = new Trainer(3, 6, 500, 10);
                 if(args.length >= 2){
                     if(args[1].equalsIgnoreCase("nogui")){
                         trainer.GUI_MODE = false;
@@ -43,6 +40,10 @@ public class StartCommand implements Command {
                 }
                 trainer.setName("trainer");
                 Main.startThread(trainer);
+            }
+            else if (args[0].contains("test"))
+            {
+                PerformanceTest.runTest();
             }
         }
     }

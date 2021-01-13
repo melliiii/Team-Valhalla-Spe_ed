@@ -8,6 +8,8 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import src.*;
 import src.algorithmic.AlgorithmicAI;
 import src.algorithmic.Odin;
+import src.algorithmic.VariantTracker;
+import src.algorithmic.thor.Thor;
 import src.game.Game;
 import src.game.GameMove;
 import src.game.GameState;
@@ -21,7 +23,8 @@ import java.util.logging.Logger;
 public class WebBridge implements SafeThread
 {
     // WSS Information TODO: Move to config file
-    private final static String url = "wss://yellowphoenix18.de:555/valhalla";//"wss://msoll.de/spe_ed?key=A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM";
+    private final static String url = "wss://yellowphoenix18.de:554/valhalla";
+    //private final static String url = "wss://msoll.de/spe_ed?key=A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM";
     private final static int expected_ping = 60;
 
     // Initialize Logger
@@ -64,7 +67,11 @@ public class WebBridge implements SafeThread
         if (ai == null)
         {
             LOGGER.log(Level.INFO, "Game started");
-            ai = new Odin(g, gameState.you-1);
+            //Coil a = new Coil(g, gameState.you-1);
+            //a.setIterations(300);
+            Odin odin = new Thor(g, gameState.you-1);
+            odin.setIterations(300);
+            ai = odin;
         }
 
         LOGGER.log(Level.INFO, "Game: " + message);
@@ -76,8 +83,12 @@ public class WebBridge implements SafeThread
         nextGameMove = GameMove.change_nothing;
         //gameMove_changed = false;
 
+        VariantTracker visualizeVariants = new VariantTracker(g, gameState.you-1);
+        ((Odin)ai).setTracker(visualizeVariants);
+
         ai.setGame(g);
-        nextGameMove = ai.decide(5);
+        nextGameMove = ai.decide();
+        stage.setVisualizeVariants(visualizeVariants);
 
         LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
 

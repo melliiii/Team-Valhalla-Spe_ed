@@ -8,7 +8,6 @@ public class Clump
     private Clump parent;
     private int leafCount;
     private Set<Clump> children;
-    private int id;
     public static int initialCapacity;
 
     public Clump(int layer)
@@ -17,7 +16,6 @@ public class Clump
         parent = null;
         leafCount = 0;
         children = new HashSet<>(layer > 0 ? initialCapacity : 0);
-        id = 0;
     }
 
     public void clear()
@@ -25,7 +23,6 @@ public class Clump
         this.layer = 0;
         parent = null;
         leafCount = 0;
-        id = 0;
     }
 
     public int getLayer() {
@@ -52,12 +49,19 @@ public class Clump
         return children;
     }
 
-    public int getId() {
-        return id;
+    public void setSealed()
+    {
+        if (parent != null)
+        {
+            parent.getHead().setSealed();
+            return;
+        }
+        layer = 0;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public boolean isSealed()
+    {
+        return layer == 0 && children.size() > 0;
     }
 
     private void updateLeafCount(int value)
@@ -94,29 +98,36 @@ public class Clump
         }
     }
 
-    public int getDepth()
-    {
-        int depth = 0;
-        if (parent == null)
-        {
-            return depth;
-        }
-        return parent.getLastParent().getDepth()+1;
-    }
-
-
-    public Clump getLastParent()
+    public Clump getHead()
     {
         if (parent == null)
         {
             return this;
         }
-        return parent.getLastParent();
+        if (parent.isSealed())
+        {
+            return parent;
+        }
+        return parent.getHead();
+    }
+
+    public Clump getLastHead()
+    {
+        if (parent == null)
+        {
+            return this;
+        }
+        Clump head = getHead();
+        if(head.isSealed())
+        {
+            return head.getLastHead();
+        }
+        return head;
     }
 
     public static void merge(Clump c1, Clump c2)
     {
-        if (c1.getLastParent() == c2.getLastParent())
+        if (c1.getHead() == c2.getHead())
         {
             return;
         }

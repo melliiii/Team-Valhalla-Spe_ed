@@ -8,8 +8,11 @@ public class Game implements Cloneable
     private GameState state;
     private List<Player> players;
     private int ticks;
+    private int currentPlayer = 0;
+    private int firstPlayer = 0;
     private static final Random random = new Random();
     private final List<Integer> deaths = new ArrayList<>();
+    private HashSet<ArrayList<Integer>> cellsChanged = new HashSet<>();
 
     public Game(GameState s, int ticks)
     {
@@ -53,7 +56,7 @@ public class Game implements Cloneable
         return new Game(s, 0);
     }
 
-    // Creates a deep clone of this src.game.Game
+    // Creates a deep clone of this game
     public Game cloneGame()
     {
         GameState s = new GameState();
@@ -76,13 +79,135 @@ public class Game implements Cloneable
             Player p = new Player(entry.getValue());
             s.players.put(entry.getKey(), p.clone().getState());
         }
+
         s.you = state.you;
         s.running = state.running;
-        return new Game(s, ticks);
+        Game g = new Game(s, ticks);
+        for (int death : deaths)
+        {
+            g.deaths.add(death);
+        }
+        g.setFirstPlayer(firstPlayer);
+        return g;
+    }
+
+    public void performMove(GameMove move)
+    {
+        if (currentPlayer == firstPlayer)
+        {
+            ticks++;
+        }
+
+        Player p = players.get(currentPlayer);
+        if (p.isActive())
+        {
+            // Map direction to int values of 0-3 (up left down right)
+            Direction dir = p.getDirection();
+            int num_dir = direction2Int(dir);
+
+            if (move == GameMove.turn_left)
+            {
+                num_dir++;
+                num_dir = num_dir % 4;
+            }
+            if (move == GameMove.turn_right)
+            {
+                num_dir--;
+                num_dir = (num_dir + 4) % 4;
+            }
+            if (move == GameMove.speed_up)
+            {
+                p.getState().speed++;
+            }
+            if (move == GameMove.slow_down)
+            {
+                p.getState().speed--;
+            }
+
+            // Map back to direction
+            p.setDirection(int2Direction(num_dir));
+
+            // Move Player
+            if (p.getSpeed() == 0)
+            {
+                killPlayer(currentPlayer);
+            }
+
+            boolean kill = false;
+            for (int m = 0; m < p.getSpeed(); ++m)
+            {
+                int[] delta = direction2Delta(p.getDirection());
+                p.getState().x += delta[0];
+                p.getState().y += delta[1];
+
+                if (!positionExists(p.getX(), p.getY()))
+                {
+                    killPlayer(currentPlayer);
+                    break;
+                }
+
+                if(p.getSpeed() < 1 || p.getSpeed() > 10)
+                {
+                    killPlayer(currentPlayer);
+                    break;
+                }
+
+                // speed >= 3 -> jump speed-2
+                if (ticks % 6 == 0 && m != 0 && m != p.getSpeed() - 1)
+                {
+                    // Jump!
+                    continue;
+                }
+
+                if(getCells()[p.getY()][p.getX()] != 0)
+                {
+                    if (getCells()[p.getY()][p.getX()] > 0)
+                    {
+                        ArrayList<Integer> l = new ArrayList<>();
+                        l.add(p.getX());
+                        l.add(p.getY());
+
+                        if (cellsChanged != null && cellsChanged.contains(l))
+                        {
+                            // Kill the hit player too
+                            killPlayer(getCells()[p.getY()][p.getX()]-1);
+                        }
+                    }
+                    // Hit another player
+                    killPlayer(currentPlayer);
+                    getCells()[p.getY()][p.getX()] = -1;
+                    break;
+                }
+                else
+                {
+                    getCells()[p.getY()][p.getX()] = currentPlayer+1;
+                    ArrayList<Integer> l = new ArrayList<>();
+                    l.add(p.getX());
+                    l.add(p.getY());
+                    cellsChanged.add(l);
+                }
+            }
+        }
+
+        currentPlayer++;
+        currentPlayer %= getPlayerCount();
+        if (currentPlayer == firstPlayer)
+        {
+            setRunning(false);
+            for (Player pl : players)
+            {
+                if (pl.isActive())
+                {
+                    setRunning(true);
+                }
+            }
+            cellsChanged.clear();
+        }
     }
 
     // Perform a move for every player. Returns a new src.game.Game (deep copy)
-    public Game variant(List<GameMove> moves) throws Exception {
+    public Game variant(List<GameMove> moves) throws Exception
+    {
         Game result = cloneGame();
 
         if (moves.size() != players.size()) {
@@ -104,6 +229,16 @@ public class Game implements Cloneable
     // Applies moves to this object
     public void tick(List<GameMove> moves)
     {
+        if (true)
+        {
+            int offset = currentPlayer;
+            for (int i = 0; i < moves.size(); ++i)
+            {
+                int index = (offset + i) % getPlayerCount();
+                performMove(moves.get(index));
+            }
+            return;
+        }
         ticks++;
         // Index maps to player Index
         for (int i = 0; i < moves.size(); ++i) {
@@ -132,7 +267,8 @@ public class Game implements Cloneable
             p.setDirection(int2Direction(num_dir));
         }
 
-        setRunning(false);
+        HashSet<ArrayList<Integer>> deathPoints = null;
+        LinkedList<Integer> killList = new LinkedList<>();
 
         // Move Players
         for(int i = 0; i < players.size(); ++i)
@@ -154,16 +290,13 @@ public class Game implements Cloneable
                 int[] delta = direction2Delta(p.getDirection());
                 p.getState().x += delta[0];
                 p.getState().y += delta[1];
-                if(p.getX() < 0 || p.getX() >= state.width)
+
+                if (!positionExists(p.getX(), p.getY()))
                 {
                     killPlayer(i);
                     break;
                 }
-                if(p.getY() < 0 || p.getY() >= state.height)
-                {
-                    killPlayer(i);
-                    break;
-                }
+
                 if(p.getSpeed() < 1 || p.getSpeed() > 10)
                 {
                     killPlayer(i);
@@ -177,22 +310,52 @@ public class Game implements Cloneable
                     continue;
                 }
 
-                // else check death and put tail
+                // Check death
                 if(getCells()[p.getY()][p.getX()] != 0)
                 {
+                    if (getCells()[p.getY()][p.getX()] > 0)
+                    {
+                        ArrayList<Integer> l = new ArrayList<>();
+                        l.add(p.getX());
+                        l.add(p.getY());
+
+                        if (deathPoints != null && deathPoints.contains(l))
+                        {
+                            // Kill the hit player too
+                            killList.add(getCells()[p.getY()][p.getX()]-1);
+                        }
+                    }
                     // Hit another player
-                    killPlayer(i);
+                    killList.add(i);
                     getCells()[p.getY()][p.getX()] = -1;
                     break;
                 }
                 else
                 {
+                    if (deathPoints == null)
+                    {
+                        deathPoints = new HashSet<>();
+                    }
                     getCells()[p.getY()][p.getX()] = i+1;
+                    ArrayList<Integer> l = new ArrayList<>();
+                    l.add(p.getX());
+                    l.add(p.getY());
+                    deathPoints.add(l);
                 }
             }
+        }
+
+        // Kill players that intersected
+        for (Integer p : killList)
+        {
+            killPlayer(p);
+        }
+
+        setRunning(false);
+        for (Player p : players)
+        {
             if (p.isActive())
             {
-                p.setScore(ticks);
                 setRunning(true);
             }
         }
@@ -205,6 +368,82 @@ public class Game implements Cloneable
             deaths.add(playerId);
         }
         players.get(playerId).setActive(false);
+    }
+
+    public boolean isDeadlyMove(int playerId, GameMove move)
+    {
+        Player player = players.get(playerId);
+        if (!player.isActive())
+        {
+            return true;
+        }
+        int ticks = this.ticks + 1;
+
+        // Map direction to int values of 0-3 (up left down right)
+        Direction dir = player.getDirection();
+        int speed = player.getSpeed();
+        int px = player.getX();
+        int py = player.getY();
+        int num_dir = direction2Int(dir);
+
+        if (move == GameMove.turn_left)
+        {
+            num_dir++;
+            num_dir = num_dir % 4;
+        }
+        if (move == GameMove.turn_right)
+        {
+            num_dir--;
+            num_dir = (num_dir + 4) % 4;
+        }
+        if (move == GameMove.speed_up)
+        {
+            speed++;
+        }
+        if (move == GameMove.slow_down)
+        {
+            speed--;
+        }
+
+        // Map back to direction
+        dir = int2Direction(num_dir);
+
+        // Move Player
+        // Legal state
+        if (speed == 0 || speed > 10)
+        {
+            return true;
+        }
+
+        for (int m = 0; m < speed; ++m)
+        {
+            int[] delta = direction2Delta(dir);
+            px += delta[0];
+            py += delta[1];
+            if (!positionExists(px, py))
+            {
+                return true;
+            }
+
+            // speed >= 3 -> jump speed-2
+            if (ticks % 6 == 0 && m != 0 && m != speed - 1)
+            {
+                // Jump!
+                continue;
+            }
+
+            // else check death
+            ArrayList<Integer> l = new ArrayList<>();
+            l.add(px);
+            l.add(py);
+
+            if (getCells()[py][px] != 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public int getDeath(int playerId)
@@ -342,5 +581,24 @@ public class Game implements Cloneable
     public boolean positionExists(int px, int py)
     {
         return (px < getWidth() && px >= 0 && py < getHeight() && py >= 0);
+    }
+
+    public int getCurrentPlayer()
+    {
+        return currentPlayer;
+    }
+
+    public int getFirstPlayer()
+    {
+        return firstPlayer;
+    }
+
+    public void setFirstPlayer(int firstPlayer)
+    {
+        if (currentPlayer == this.firstPlayer)
+        {
+            this.firstPlayer = firstPlayer;
+            this.currentPlayer = firstPlayer;
+        }
     }
 }

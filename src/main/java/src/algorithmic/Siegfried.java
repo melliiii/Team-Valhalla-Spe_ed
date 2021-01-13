@@ -19,7 +19,7 @@ public class Siegfried extends AlgorithmicAI
     }
 
     @Override
-    public GameMove decide(int depth)
+    public GameMove decide()
     {
         Player player = game.getPlayer(playerId);
         if (!shared)
@@ -37,7 +37,7 @@ public class Siegfried extends AlgorithmicAI
         int playerDir = Game.direction2Int(player.getDirection());
         int offset = playerDir;
 
-        if (random.nextFloat() > 0.5)
+        if (random.nextFloat() > 0.9)
         {
             offset = random.nextInt(100);
         }
@@ -48,7 +48,7 @@ public class Siegfried extends AlgorithmicAI
             int[] idxy = Game.direction2Delta(Game.int2Direction(head));
             if (game.positionExists(player.getX() + idxy[0], player.getY() + idxy[1]))
             {
-                int ahead = lookAhead(player.getX(), player.getY(), Game.int2Direction(head));
+                int ahead = lookAhead(game, player.getX(), player.getY(), Game.int2Direction(head));
                 int speed = player.getSpeed();
                 int space = finder.getAreaAt(player.getX() + idxy[0], player.getY() + idxy[1]);
 
@@ -72,7 +72,7 @@ public class Siegfried extends AlgorithmicAI
             }
         }
 
-        double ahead = lookAhead(player.getX(), player.getY(), player.getDirection());
+        double ahead = lookAhead(game, player.getX(), player.getY(), player.getDirection());
         double speed = Math.sqrt(ahead / 2.0);
         int maxspeed = (int)speed;
         if (player.getSpeed() < maxspeed && player.getSpeed() < 10)

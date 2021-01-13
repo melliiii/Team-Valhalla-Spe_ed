@@ -45,9 +45,9 @@ public class Trainer extends Thread implements SafeThread
                 Neat.p_pop_size /* population size */,
                 inputCount /* network inputs */ ,
                 5 /* network outputs */,
-                40 /* max index of nodes */,
+                10 /* max index of nodes */,
                 true /* recurrent */,
-                0.24 /* probability of connecting two nodes */
+                0.5 /* probability of connecting two nodes */
         );
 
         //population = new Population(
@@ -254,7 +254,6 @@ public class Trainer extends Thread implements SafeThread
                         }
                     }
                     Game game = Game.create(50, 50, names);
-                    Siegfried sigi = new Siegfried(game, 5);
 
                     // Evaluation until game finishes
                     while(game.isRunning() && running)
@@ -277,11 +276,6 @@ public class Trainer extends Thread implements SafeThread
                                     {
                                         sum+=Math.sqrt(game.getDeaths());
                                     }
-                                }
-                                else if (p == 5)
-                                {
-                                    move = sigi.decide(0);
-                                    algo_avg+=Math.sqrt(game.getDeaths());
                                 }
                                 else
                                 {
@@ -372,7 +366,7 @@ public class Trainer extends Thread implements SafeThread
                             }
                             else if (p == 5)
                             {
-                                move = sigi.decide(0);
+                                move = sigi.decide();
                             }
                             else
                             {
