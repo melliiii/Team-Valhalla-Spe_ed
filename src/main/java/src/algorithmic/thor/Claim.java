@@ -4,12 +4,11 @@ import src.algorithmic.Odin;
 import src.game.Game;
 import src.game.GameMove;
 
-public class Claim extends Odin implements Strategy
+public class Claim extends Thor implements Strategy
 {
     public Claim(Game game, int playerId)
     {
         super(game, playerId);
-        setSearchMethod(SearchMethod.monte_carlo_tree);
         setEvalMethod(EvaluationMethod.area_monte_carlo);
         setIterations(1000);
         setBatchSize(1);

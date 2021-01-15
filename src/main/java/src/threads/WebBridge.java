@@ -6,8 +6,6 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import src.WebSocketListener;
-import src.algorithmic.AlgorithmicAI;
-import src.algorithmic.Odin;
 import src.algorithmic.VariantTracker;
 import src.algorithmic.thor.Thor;
 import src.game.Game;
@@ -46,7 +44,7 @@ public class WebBridge
     private GameMove nextGameMove = GameMove.change_nothing;
     private boolean gameMove_changed = false;
     private Stage stage = new Stage(false);
-    private AlgorithmicAI ai;
+    private Thor ai;
     private int ticks = 0;
 
     public void handleMessage(WebSocket websocket, String message) {
@@ -67,11 +65,9 @@ public class WebBridge
         if (ai == null)
         {
             LOGGER.log(Level.INFO, "Game started");
-            //Coil a = new Coil(g, gameState.you-1);
-            //a.setIterations(300);
-            Odin odin = new Thor(g, gameState.you-1);
-            odin.setIterations(300);
-            ai = odin;
+            Thor thor = new Thor(g, gameState.you-1);
+            thor.setIterations(300);
+            ai = thor;
         }
 
         stage.setGame(g);
@@ -82,7 +78,7 @@ public class WebBridge
         //gameMove_changed = false;
 
         VariantTracker visualizeVariants = new VariantTracker(g, gameState.you-1);
-        ((Odin)ai).setTracker(visualizeVariants);
+        ((Thor)ai).setTracker(visualizeVariants);
 
         ai.setGame(g);
         nextGameMove = ai.decide();

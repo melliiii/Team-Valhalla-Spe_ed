@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class AreaFinder
 {
-    private List<Field>[] nConnected;
-    private Set<Clump>[] nAreas;
+    //private List<Field>[] nConnected;
+    //private Set<Clump>[] nAreas;
     private final Field[][] collected;
     private Game game;
     private int areaLeft;
@@ -26,13 +26,13 @@ public class AreaFinder
 
     private void connectAt(int x, int y)
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 2; ++i)
         {
             int[] dxy = Game.direction2Delta(Game.int2Direction(i));
             if (    game.positionExists(x + dxy[0], y + dxy[1]) &&
-                    game.getCells()[y + dxy[1]][x + dxy[0]] == 0 &&
+                    game.getCells()[y + dxy[1]][x + dxy[0]] == 0 /*&&
                     collected[y + dxy[1]][x + dxy[0]].getConnections() >=
-                            collected[y][x].getConnections()
+                            collected[y][x].getConnections()*/
                 )
             {
                 Clump.merge(collected[y + dxy[1]][x + dxy[0]], collected[y][x]);
@@ -67,16 +67,16 @@ public class AreaFinder
 
     public void findAreas(boolean useC)
     {
-        nConnected = new List[4];
-        nConnected[0] = new LinkedList<>();
-        nConnected[1] = new LinkedList<>();
-        nConnected[2] = new LinkedList<>();
-        nConnected[3] = new LinkedList<>();
-        nAreas = new Set[4];
-        nAreas[0] = new HashSet<>();
-        nAreas[1] = new HashSet<>();
-        nAreas[2] = new HashSet<>();
-        nAreas[3] = new HashSet<>();
+        //nConnected = new List[4];
+        //nConnected[0] = new LinkedList<>();
+        //nConnected[1] = new LinkedList<>();
+        //nConnected[2] = new LinkedList<>();
+        //nConnected[3] = new LinkedList<>();
+        //nAreas = new Set[4];
+        //nAreas[0] = new HashSet<>();
+        //nAreas[1] = new HashSet<>();
+        //nAreas[2] = new HashSet<>();
+        //nAreas[3] = new HashSet<>();
         areaLeft = 0;
 
         for (int x = 0; x < game.getWidth(); ++x)
@@ -89,10 +89,11 @@ public class AreaFinder
                     int c = countConnections(x, y);
                     collected[y][x] = new Field(0, c, x, y);
                     collected[y][x].setLeafCount(useC ? c : 1);
-                    if (c > 0)
-                    {
-                        nConnected[c-1].add(collected[y][x]);
-                    }
+                    //if (c > 0)
+                    //{
+                    //    nConnected[c-1].add(collected[y][x]);
+                    //}
+                    connectAt(x, y);
                 }
                 else
                 {
@@ -101,29 +102,29 @@ public class AreaFinder
             }
         }
 
-        for (int i = 3; i >= 0; --i)
-        {
-            Set<Clump> grab = new HashSet<>();
-            for (Field f : nConnected[i])
-            {
-                connectAt(f.getX(), f.getY());
-                grab.add(f.getHead());
-            }
-            Set<Clump> areas = new HashSet<>();
-            for (Clump c : grab)
-            {
-                Clump next = c;
-                if (!c.isSealed())
-                {
-                    next = c.getHead();
-                }
-
-                //next.setSealed();
-                areas.add(next);
-            }
-
-            nAreas[i] = areas;
-        }
+        //for (int i = 3; false && i >= 0; --i)
+        //{
+        //    Set<Clump> grab = new HashSet<>();
+        //    for (Field f : nConnected[i])
+        //    {
+        //        connectAt(f.getX(), f.getY());
+        //        grab.add(f.getHead());
+        //    }
+        //    Set<Clump> areas = new HashSet<>();
+        //    for (Clump c : grab)
+        //    {
+        //        Clump next = c;
+        //        if (!c.isSealed())
+        //        {
+        //            next = c.getHead();
+        //        }
+//
+        //        //next.setSealed();
+        //        areas.add(next);
+        //    }
+//
+        //    nAreas[i] = areas;
+        //}
     }
 
     public Field[][] getCollected()

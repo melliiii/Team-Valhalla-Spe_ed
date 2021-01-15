@@ -13,7 +13,6 @@ public class StateMachine extends AlgorithmicAI
         selector = new StrategySelector();
         selector.addStrategy(new Coil(game, playerId));
         selector.addStrategy(new Escape(game, playerId));
-        selector.addStrategy(new Thor(game, playerId));
         selector.addStrategy(new Defend(game, playerId));
         selector.addStrategy(new Claim(game, playerId));
     }

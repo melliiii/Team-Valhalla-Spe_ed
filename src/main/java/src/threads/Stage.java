@@ -41,7 +41,7 @@ public class Stage extends JPanel implements KeyListener
         names.add("Aragorn");
         names.add("Sauron");
 
-        this.game = Game.create(80, 80, names);
+        this.game = Game.create(50, 50, names);
         //finder = new AreaFinder(game);
 
         JFrame frame = new JFrame(title);
@@ -185,11 +185,19 @@ public class Stage extends JPanel implements KeyListener
         {
             if (i == 0)
             {
-                Odin a = new Thor(game, i);
+                Thor a = new Thor(game, i);
                 visualizeVariants = new VariantTracker(game, i);
                 a.setTracker(visualizeVariants);
-                a.setIterations(1500);
+                a.setIterations(500);
                 a.setMemorizeTree(true);
+                ais[i] = a;
+            }
+            else if (i == 1)
+            {
+                Thor a = new Thor(game, i);
+                a.setIterations(500);
+                a.setMemorizeTree(true);
+                a.setEvalMethod(Odin.EvaluationMethod.area_div_enemies);
                 ais[i] = a;
             }
             else
@@ -209,7 +217,7 @@ public class Stage extends JPanel implements KeyListener
                 GameMove move;
                 if (i == 0)
                 {
-                    Odin a = (Odin) ais[i];
+                    Thor a = (Thor) ais[i];
                     a.setTracker(new VariantTracker(game, i));
                     nextTracker = a.getTracker();
                 }
