@@ -7,6 +7,7 @@ import src.threads.WebBridge;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main
@@ -55,7 +56,9 @@ public class Main
     }
 
     private static void startInStage(String[] args) {
-        Stage stage = new Stage("Stage", false);
+        boolean gui = Arrays.asList(args).contains("gui");
+        System.out.println("Starting with UI: " + (gui ? "yes" : "no"));
+        Stage stage = new Stage("Stage", false, gui);
         stage.loop();
     }
 
@@ -65,11 +68,14 @@ public class Main
             return;
         }
 
+        boolean gui = Arrays.asList(args).contains("gui");
+        System.out.println("Starting with UI: " + (gui ? "yes" : "no") + " (add \"gui\" flag to display UI)");
+
         // Remove slash at the end if it exists
         if(args[1].endsWith("/")) args[1] = args[1].substring(0, args[1].length()-2);
 
         // Initiate WebBridge
-        WebBridge webBridge = new WebBridge();
+        WebBridge webBridge = new WebBridge(false, gui);
         webBridge.setUrl(args[1] + "?key=" + args[2]);
 
         // Start WebBridge

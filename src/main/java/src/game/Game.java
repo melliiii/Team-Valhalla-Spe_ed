@@ -6,6 +6,7 @@ import java.util.*;
 public class Game implements Cloneable
 {
     private GameState state;
+
     private List<Player> players;
     private int ticks;
     private int currentPlayer = 0;
@@ -455,6 +456,10 @@ public class Game implements Cloneable
         return deaths.size();
     }
 
+    public List<Integer> getDeadPlayersList(){
+        return deaths;
+    }
+
     public GameState getState() {
         return state;
     }
@@ -559,7 +564,7 @@ public class Game implements Cloneable
     }
 
     public int getYou() {
-        return state.you;
+        return state.you ;
     }
 
     public void setYou(int you) {
@@ -591,6 +596,10 @@ public class Game implements Cloneable
     public int getFirstPlayer()
     {
         return firstPlayer;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 
     public void setFirstPlayer(int firstPlayer)
