@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@SuppressWarnings("SuspiciousNameCombination")
 public class Stage extends JPanel implements KeyListener
 {
     public static final Random random = new Random();
@@ -42,8 +41,7 @@ public class Stage extends JPanel implements KeyListener
         names.add("Aragorn");
         names.add("Sauron");
 
-        Game game = Game.create(80, 80, names);
-        this.game = game;
+        this.game = Game.create(80, 80, names);
         //finder = new AreaFinder(game);
 
         JFrame frame = new JFrame(title);
@@ -190,14 +188,14 @@ public class Stage extends JPanel implements KeyListener
                 Odin a = new Thor(game, i);
                 visualizeVariants = new VariantTracker(game, i);
                 a.setTracker(visualizeVariants);
-                a.setIterations(500);
+                a.setIterations(700);
                 a.setMemorizeTree(true);
                 ais[i] = a;
             }
             else if (i == 2)
             {
                 Odin a = new Thor(game, i);
-                a.setIterations(500);
+                a.setIterations(700);
                 a.setMemorizeTree(false);
                 ais[i] = a;
             }
@@ -212,7 +210,7 @@ public class Stage extends JPanel implements KeyListener
         VariantTracker nextTracker = null;
         while (game.isRunning())
         {
-            List<GameMove> moves = new ArrayList<GameMove>();
+            List<GameMove> moves = new ArrayList<>();
             for (int i = 0; i < game.getPlayerCount(); ++i)
             {
                 GameMove move;

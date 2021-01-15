@@ -20,10 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class WebBridge implements SafeThread
+public class WebBridge
 {
     // WSS Information TODO: Move to config file
-    private final static String url = "wss://yellowphoenix18.de:554/valhalla";
+    private String url = "wss://yellowphoenix18.de:554/valhalla";
     //private final static String url = "wss://msoll.de/spe_ed?key=A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM";
     private final static int expected_ping = 60;
 
@@ -131,19 +131,16 @@ public class WebBridge implements SafeThread
         System.exit(status);
     }
 
-    @Override
     public boolean isRunning()
     {
         return websocket != null;
     }
 
-    @Override
     public void terminate()
     {
         shutdown(1);
     }
 
-    @Override
     public void start()
     {
         try
@@ -166,5 +163,13 @@ public class WebBridge implements SafeThread
             LOGGER.log(Level.SEVERE, e.getMessage());
             shutdown(1);
         }
+    }
+
+    public void setUrl(String url){
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return this.url;
     }
 }

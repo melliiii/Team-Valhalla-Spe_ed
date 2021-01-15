@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Speed Stage" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="src.Main" />
+    <module name="SpeedWebsocketTest" />
+    <option name="PROGRAM_PARAMETERS" value="stage" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

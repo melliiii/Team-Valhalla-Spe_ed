@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="WebSocket User Server" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="src.Main" />
+    <module name="SpeedWebsocketTest" />
+    <option name="PROGRAM_PARAMETERS" value="live wss://yellowphoenix18.de:554/valhalla kdkkd https://msoll.de/spe_ed_time" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

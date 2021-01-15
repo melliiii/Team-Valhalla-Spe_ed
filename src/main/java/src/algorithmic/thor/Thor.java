@@ -24,7 +24,7 @@ public class Thor extends Odin implements Strategy
         setSearchMethod(SearchMethod.monte_carlo_tree);
         setDepth(3);
         setEvalMethod(EvaluationMethod.area_div_enemies);
-        setIterations(5000);
+        setIterations(15000);
         setBatchSize(30);
         setExploration(1.5);//Math.sqrt(2.0));
         setMemorizeTree(true);
@@ -107,14 +107,7 @@ public class Thor extends Odin implements Strategy
         SortedSet<Player> mainEnemies = getMainEnemies(game, playerId);
         if (test)
         {
-            if (mainEnemies.size() != 0)
-            {
-                setMemorizeTree(false);
-            }
-            else
-            {
-                setMemorizeTree(true);
-            }
+            setMemorizeTree(mainEnemies.size() == 0);
         }
         return super.decide();
     }
