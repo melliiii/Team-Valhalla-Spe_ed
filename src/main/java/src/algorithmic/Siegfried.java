@@ -35,7 +35,7 @@ public class Siegfried extends AlgorithmicAI
         int playerDir = Game.direction2Int(player.getDirection());
         int offset = playerDir;
 
-        if (random.nextFloat() > 0.9)
+        if (random.nextFloat() > 0.5)
         {
             offset = random.nextInt(100);
         }

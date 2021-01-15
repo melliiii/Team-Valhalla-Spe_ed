@@ -7,12 +7,11 @@ import src.game.Player;
 
 import java.util.SortedSet;
 
-public class Defend extends Odin implements Strategy
+public class Defend extends Thor implements Strategy
 {
     public Defend(Game game, int playerId)
     {
         super(game, playerId);
-        setSearchMethod(SearchMethod.monte_carlo_tree);
         setEvalMethod(EvaluationMethod.area_div_enemies);
         setIterations(500);
     }

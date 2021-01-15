@@ -1,6 +1,8 @@
 package src.threads;
 
 import src.algorithmic.AlgorithmicAI;
+import src.algorithmic.Odin;
+import src.algorithmic.VariantTracker;
 import src.algorithmic.thor.Thor;
 import src.game.Game;
 import src.game.GameMove;
@@ -66,7 +68,7 @@ public class PerformanceTest
 
     public static void runTest()
     {
-        int playerCount = 4;
+        int playerCount = 2;
         PerformanceTest test = new PerformanceTest();
         AlgorithmicAI[] ais = new AlgorithmicAI[playerCount];
 
@@ -79,22 +81,21 @@ public class PerformanceTest
 
         for (int i = 0; i < playerCount; ++i)
         {
-            Thor a = new Thor(game, i);
-            a.setIterations(200);
-            switch (i)
+            if (i == 0)
             {
-                case 0:
-                case 1:
-                    a.setMemorizeTree(false);
-                    break;
-                case 2:
-                case 3:
-                    a.setMemorizeTree(true);
-                    break;
+                Thor a = new Thor(game, i);
+                a.setIterations(100);
+                a.setMemorizeTree(true);
+                ais[i] = a;
             }
-            a.setExploration(Math.sqrt(2));
-            ais[i] = a;
-            players.set(i, a.getRandomMethod().toString());
+            else
+            {
+                Thor a = new Thor(game, i);
+                a.setIterations(100);
+                a.setMemorizeTree(false);
+                a.setEvalMethod(Odin.EvaluationMethod.area_div_enemies);
+                ais[i] = a;
+            }
         }
 
         test.setAIs(ais);

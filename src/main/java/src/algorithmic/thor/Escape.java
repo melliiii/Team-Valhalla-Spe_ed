@@ -4,12 +4,11 @@ import src.algorithmic.Odin;
 import src.game.Game;
 import src.game.GameMove;
 
-public class Escape extends Odin implements Strategy
+public class Escape extends Thor implements Strategy
 {
     public Escape(Game game, int playerId)
     {
         super(game, playerId);
-        setSearchMethod(SearchMethod.monte_carlo_tree);
         setEvalMethod(EvaluationMethod.area);
         setIterations(500);
     }
