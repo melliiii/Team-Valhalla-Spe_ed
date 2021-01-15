@@ -1,6 +1,5 @@
 package src.algorithmic;
 
-import src.game.Game;
 import src.game.GameMove;
 
 import java.util.*;

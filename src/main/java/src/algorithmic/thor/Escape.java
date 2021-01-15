@@ -3,9 +3,6 @@ package src.algorithmic.thor;
 import src.algorithmic.Odin;
 import src.game.Game;
 import src.game.GameMove;
-import src.game.Player;
-
-import java.util.SortedSet;
 
 public class Escape extends Odin implements Strategy
 {

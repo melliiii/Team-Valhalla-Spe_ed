@@ -1,13 +1,11 @@
 package src.algorithmic.thor;
 
-import src.algorithmic.Clump;
 import src.algorithmic.Odin;
 import src.game.Direction;
 import src.game.Game;
 import src.game.GameMove;
 import src.game.Player;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 

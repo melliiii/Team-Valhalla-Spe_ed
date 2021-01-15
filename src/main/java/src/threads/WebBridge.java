@@ -5,7 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import src.*;
+import src.WebSocketListener;
 import src.algorithmic.AlgorithmicAI;
 import src.algorithmic.Odin;
 import src.algorithmic.VariantTracker;
@@ -20,10 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class WebBridge implements SafeThread
+public class WebBridge
 {
     // WSS Information TODO: Move to config file
-    private final static String url = "wss://yellowphoenix18.de:554/valhalla";
+    private String url = "wss://yellowphoenix18.de:554/valhalla";
     //private final static String url = "wss://msoll.de/spe_ed?key=A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM";
     private final static int expected_ping = 60;
 
@@ -74,8 +74,6 @@ public class WebBridge implements SafeThread
             ai = odin;
         }
 
-        LOGGER.log(Level.INFO, "Game: " + message);
-
         stage.setGame(g);
         stage.repaint();
 
@@ -92,31 +90,8 @@ public class WebBridge implements SafeThread
 
         LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
 
-        // in synchronized thread
-
-        // Wait for Action
-        /*
-        try {
-            long timeMillisLeft =  gameState.getDeadline().getTime() - System.currentTimeMillis();
-            while(timeMillisLeft >= expected_ping){
-                Thread.sleep(timeMillisLeft / 4);
-                timeMillisLeft =  gameState.getDeadline().getTime() - System.currentTimeMillis();
-                if(gameMove_changed) break; // break if action got selected
-            }
-        } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        }
-
-        // if action wasnt changed make a log entry
-        if(!gameMove_changed){
-            // TODO notify synchronized thread
-            LOGGER.log(Level.WARNING, "No game move delivered in time by scoring system!");
-        }
-        */
-
         // Parse actions as JSON and send it to server
         String actionJson = "{\"action\": \"" + nextGameMove.toString() + "\"}";
-        LOGGER.log(Level.INFO, "Sending message: " + actionJson);
         websocket.sendText(actionJson);
     }
 
@@ -131,19 +106,16 @@ public class WebBridge implements SafeThread
         System.exit(status);
     }
 
-    @Override
     public boolean isRunning()
     {
         return websocket != null;
     }
 
-    @Override
     public void terminate()
     {
         shutdown(1);
     }
 
-    @Override
     public void start()
     {
         try
@@ -166,5 +138,13 @@ public class WebBridge implements SafeThread
             LOGGER.log(Level.SEVERE, e.getMessage());
             shutdown(1);
         }
+    }
+
+    public void setUrl(String url){
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return this.url;
     }
 }

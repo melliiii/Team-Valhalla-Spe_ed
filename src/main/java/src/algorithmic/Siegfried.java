@@ -1,6 +1,5 @@
 package src.algorithmic;
 
-import src.algorithmic.AlgorithmicAI;
 import src.game.Game;
 import src.game.GameMove;
 import src.game.Player;
@@ -14,8 +13,7 @@ public class Siegfried extends AlgorithmicAI
 
     private GameMove coil(Player player, int[] dxy)
     {
-        GameMove result = GameMove.change_nothing;
-        return result;
+        return GameMove.change_nothing;
     }
 
     @Override

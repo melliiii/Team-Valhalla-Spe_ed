@@ -314,13 +314,7 @@ public class Odin extends AlgorithmicAI
             if (next.isLeaf())
             {
                 List<GameMove> opt = new LinkedList<>();
-                for (int o = 0; o < options.length; ++o)
-                {
-                    //if (!g.isDeadlyMove(next.getPlayerId(), options[o]))
-                    {
-                        opt.add(options[o]);
-                    }
-                }
+                Collections.addAll(opt, options);
                 //if (opt.isEmpty())
                 //{
                 //    opt.add(GameMove.change_nothing);
@@ -388,6 +382,7 @@ public class Odin extends AlgorithmicAI
 
             if (eval > 0 && eval > max * (1.0 / exploration) && depth > 0)
             {
+                assert next != null;
                 eval = max(next, playerId, max, depth-1)[0].doubleValue();
             }
             if (eval > max)

@@ -1,54 +1,78 @@
 package src;
 
-import src.commands.CommandManager;
-import src.threads.ConsoleListenerThread;
-import src.threads.SafeThread;
+import src.threads.PerformanceTest;
+import src.threads.Stage;
+import src.threads.WebBridge;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
+import java.util.Scanner;
 
 public class Main
 {
-    private static final List<SafeThread> runningThreads = new ArrayList<>();
-    private static ConsoleListenerThread consoleListenerThread;
     public static void main(String[] args)
     {
-
-        // TODO List: (IMPORTANT!!!)
-        /*
-        * - Move Neat Params to config
-        * - Console Commands like "show_pop 150" or "pause_training"
-        * - Really should change the fitness calculation.... Fucks up the whole training lol
-        * - Refactor/rename src.threads.Stage class
-        * */
-
-        if (args.length == 1)
-        {
-            CommandManager commandManager = new CommandManager();
-            commandManager.perform("start " + args[0]);
-        }
-
-        consoleListenerThread = new ConsoleListenerThread();
-        consoleListenerThread.setName("ConsoleListener");
-        consoleListenerThread.start();
-
-    }
-
-    public static void startThread(SafeThread thread){
-        runningThreads.add(thread);
-        thread.start();
-    }
-
-    public static void stopThreads(){
-        for(SafeThread thread : runningThreads){
-            if(thread != null){
-                thread.terminate();
+        try {
+            File headerFile = new File("header.txt");
+            Scanner headerScanner = null;
+            headerScanner = new Scanner(headerFile);
+            while(headerScanner.hasNextLine()){
+                System.out.println(headerScanner.nextLine());
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        consoleListenerThread.terminate();
+
+        TimeSync timeSync = new TimeSync("https://msoll.de/spe_ed_time");
+        try {
+            System.out.println("Delay zum Server: " + timeSync.calculateDelay(LocalDateTime.now()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(args.length >= 1){
+            switch(args[0]){
+                case "live":
+                    startInLive(args);
+                    break;
+                case "stage":
+                    startInStage(args);
+                    break;
+                case "performance":
+                    startInPerformance(args);
+                    break;
+                default:
+                    System.out.println("Applicable arguments are: live, stage, performance");
+                    break;
+            }
+        }else{
+            System.out.println("You need to at least start with one argument (live, stage, performance)");
+        }
     }
 
-    public static List<SafeThread> getRunningThreads() {
-        return runningThreads;
+    private static void startInPerformance(String[] args) {
+        PerformanceTest.runTest();
+    }
+
+    private static void startInStage(String[] args) {
+        Stage stage = new Stage("Stage", false);
+        stage.loop();
+    }
+
+    private static void startInLive(String[] args) {
+        if(args.length < 4){
+            System.out.println("Wrong Format! Use: start SERVER_URL API_KEY TIME_SERVER");
+            return;
+        }
+
+        // Remove slash at the end if it exists
+        if(args[1].endsWith("/")) args[1] = args[1].substring(0, args[1].length()-2);
+
+        // Initiate WebBridge
+        WebBridge webBridge = new WebBridge();
+        webBridge.setUrl(args[1] + "?key=" + args[2]);
+
+        // Start WebBridge
+        webBridge.start();
     }
 }

@@ -1,6 +1,5 @@
 package src.algorithmic.thor;
 
-import src.algorithmic.AreaFinder;
 import src.algorithmic.Odin;
 import src.game.Game;
 import src.game.GameMove;
@@ -17,10 +16,7 @@ public class Thor extends Odin implements Strategy
     public Thor(Game game, int playerId)
     {
         super(game, playerId);
-        if (playerId == 0)
-        {
-            //test = true;
-        }
+
         setSearchMethod(SearchMethod.monte_carlo_tree);
         setDepth(3);
         setEvalMethod(EvaluationMethod.area);
@@ -39,7 +35,6 @@ public class Thor extends Odin implements Strategy
         {
             return 0;
         }
-        double score = super.evaluate(current, playerId);
         //    targetId = mainEnemies.first().getID()-1;
         //    enemyScore = super.evaluate(current, targetId);
         //}
@@ -53,7 +48,7 @@ public class Thor extends Odin implements Strategy
         //score *= closeness * closeness;
         //score /= getMainEnemies(current, playerId).size() + 1.0;
         //score /= enemyScore;
-        return score;
+        return super.evaluate(current, playerId);
     }
 
     @Override
@@ -107,14 +102,7 @@ public class Thor extends Odin implements Strategy
         SortedSet<Player> mainEnemies = getMainEnemies(game, playerId);
         if (test)
         {
-            if (mainEnemies.size() != 0)
-            {
-                setMemorizeTree(false);
-            }
-            else
-            {
-                setMemorizeTree(true);
-            }
+            setMemorizeTree(mainEnemies.size() == 0);
         }
         return super.decide();
     }
