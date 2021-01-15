@@ -1,9 +1,7 @@
 package src.algorithmic;
 
-import src.game.Game;
 import src.game.GameMove;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,13 +83,11 @@ public class MCTSNode
         }
         double max = 0;
         MCTSNode next = children[0];
-        for (int i = 0; i < children.length; ++i)
-        {
-            double confidence = children[i].getConfidence(c);
-            if (confidence > max)
-            {
+        for (MCTSNode child : children) {
+            double confidence = child.getConfidence(c);
+            if (confidence > max) {
                 max = confidence;
-                next = children[i];
+                next = child;
             }
         }
         return next.selectNode(c);
@@ -167,9 +163,8 @@ public class MCTSNode
         evaluated = false;
         if (!isLeaf())
         {
-            for (int i = 0; i < children.length; ++i)
-            {
-                children[i].resetN();
+            for (MCTSNode child : children) {
+                child.resetN();
             }
         }
     }

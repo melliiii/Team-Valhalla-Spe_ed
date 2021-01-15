@@ -4,7 +4,7 @@ import src.algorithmic.AlgorithmicAI;
 import src.algorithmic.AreaFinder;
 import src.algorithmic.Odin;
 import src.algorithmic.VariantTracker;
-import src.algorithmic.thor.*;
+import src.algorithmic.thor.Thor;
 import src.game.Direction;
 import src.game.Game;
 import src.game.GameMove;

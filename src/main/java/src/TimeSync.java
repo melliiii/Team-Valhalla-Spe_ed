@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.time.LocalDate;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -20,7 +20,7 @@ public class TimeSync {
         this.url = url;
     }
 
-    public long calculateDelay(LocalDateTime systemtime) throws Exception {
+    public long calculateDelay(LocalDateTime systemtime) {
         LocalDateTime servertime = getServertime();
         return ChronoUnit.NANOS.between(systemtime, servertime) / 1000000;
     }
@@ -37,9 +37,8 @@ public class TimeSync {
         try {
             JSONObject servertimeJSON = readJsonFromUrl(this.url);
             ZonedDateTime servertimeUTC = ZonedDateTime.parse(servertimeJSON.getString("time")).plusNanos(servertimeJSON.getLong("milliseconds") * 1000000);
-            LocalDateTime servertime = LocalDateTime.ofInstant(servertimeUTC.toInstant(), ZoneOffset.systemDefault());
 
-            return servertime;
+            return LocalDateTime.ofInstant(servertimeUTC.toInstant(), ZoneOffset.systemDefault());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,14 +46,10 @@ public class TimeSync {
     }
 
     public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
-        InputStream is = new URL(url).openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        try (InputStream is = new URL(url).openStream()) {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
+            return new JSONObject(jsonText);
         }
     }
 

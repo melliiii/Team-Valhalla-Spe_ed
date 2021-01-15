@@ -1,6 +1,5 @@
 package src.algorithmic.thor;
 
-import src.algorithmic.AreaFinder;
 import src.game.Game;
 import src.game.Player;
 

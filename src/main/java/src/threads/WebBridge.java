@@ -5,7 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import src.*;
+import src.WebSocketListener;
 import src.algorithmic.AlgorithmicAI;
 import src.algorithmic.Odin;
 import src.algorithmic.VariantTracker;

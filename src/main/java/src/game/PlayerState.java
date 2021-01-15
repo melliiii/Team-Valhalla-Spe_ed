@@ -1,7 +1,5 @@
 package src.game;
 
-import src.game.Direction;
-
 public class PlayerState {
     public int ID = 0;
     public int x = 0;

@@ -6,7 +6,10 @@ import src.game.Game;
 import src.game.GameMove;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class PerformanceTest
 {
@@ -26,7 +29,7 @@ public class PerformanceTest
 
         while (game.isRunning())
         {
-            List<GameMove> moves = new ArrayList<GameMove>();
+            List<GameMove> moves = new ArrayList<>();
             for (int i = 0; i < game.getPlayerCount(); ++i)
             {
                 GameMove move = ais[i].decide();
