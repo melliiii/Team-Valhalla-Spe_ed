@@ -66,7 +66,6 @@ public class WebBridge
         {
             LOGGER.log(Level.INFO, "Game started");
             Thor thor = new Thor(g, gameState.you-1);
-            thor.setIterations(300);
             ai = thor;
         }
 
@@ -81,7 +80,14 @@ public class WebBridge
         ((Thor)ai).setTracker(visualizeVariants);
 
         ai.setGame(g);
-        nextGameMove = ai.decide();
+        ai.beginTurn();
+
+        // Replace this with deadline check
+        for (int i = 0; i < 300; ++i)
+        {
+            ai.treeSearchIteration();
+        }
+        nextGameMove = ai.endTurn();
         stage.setVisualizeVariants(visualizeVariants);
 
         LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());

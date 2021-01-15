@@ -92,7 +92,7 @@ public class PerformanceTest
             {
                 Thor a = new Thor(game, i);
                 a.setIterations(100);
-                a.setMemorizeTree(true);
+                a.setMemorizeTree(false);
                 a.setEvalMethod(Odin.EvaluationMethod.area_div_enemies);
                 ais[i] = a;
             }

@@ -71,7 +71,7 @@ public class Thor extends Odin
         return super.evaluate(current, playerId);
     }
 
-    void treeSearchIteration()
+    public void treeSearchIteration()
     {
         double c = getExploration();
         GameMove[] options = getOptions();
