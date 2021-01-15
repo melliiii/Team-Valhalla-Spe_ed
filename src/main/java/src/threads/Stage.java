@@ -190,15 +190,8 @@ public class Stage extends JPanel implements KeyListener
                 Odin a = new Thor(game, i);
                 visualizeVariants = new VariantTracker(game, i);
                 a.setTracker(visualizeVariants);
-                a.setIterations(500);
+                a.setIterations(1500);
                 a.setMemorizeTree(true);
-                ais[i] = a;
-            }
-            else if (i == 2)
-            {
-                Odin a = new Thor(game, i);
-                a.setIterations(500);
-                a.setMemorizeTree(false);
                 ais[i] = a;
             }
             else

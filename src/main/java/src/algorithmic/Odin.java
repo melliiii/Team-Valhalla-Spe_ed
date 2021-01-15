@@ -14,6 +14,7 @@ public class Odin extends AlgorithmicAI
     private int iterations = 100;
     private int batchSize = 10;
     private int depth = 2;
+    private double enemySmartness = 0;
     private double exploration = Math.sqrt(2);
     private boolean useC = false;
     private RandomMethod randomMethod = RandomMethod.equal;
@@ -89,6 +90,16 @@ public class Odin extends AlgorithmicAI
     public void setTracker(VariantTracker tracker)
     {
         this.tracker = tracker;
+    }
+
+    public double getEnemySmartness()
+    {
+        return enemySmartness;
+    }
+
+    public void setEnemySmartness(double enemySmartness)
+    {
+        this.enemySmartness = enemySmartness;
     }
 
     public enum SearchMethod
@@ -207,7 +218,19 @@ public class Odin extends AlgorithmicAI
             //score = 0.75 * score + 0.25 * monte_carlo_score;
             return score;
         }
-        return score / allAreas;
+        return score / finder.getAreaLeft();
+    }
+
+    // Plays random based on moveProbabilities. Avoids deadly moves
+    public GameMove enemyAI(Game game, int playerId)
+    {
+        if (random.nextDouble() < enemySmartness)
+        {
+            //Siegfried sigi = new Siegfried(game, playerId);
+            //return sigi.decide();
+            return botLookAhead(game, playerId);
+        }
+        return randomMove(game, playerId, randomMethod);
     }
 
     public GameMove MonteCarloTreeSearch(double c, int iterations)
@@ -227,20 +250,47 @@ public class Odin extends AlgorithmicAI
         {
             // Select a node
             MCTSNode next = root.selectNode(c);
+            
+            int enemyAreaBefore = 0;
 
             List<GameMove> path = next.getPath();
             Game g = start.cloneGame();
-            for (GameMove m : path)
+            for (int step = 0; step < path.size(); ++step)
             {
+                GameMove m = path.get(step);
+
                 // Move next players randomly
                 for (int p = 1; p < g.getPlayerCount(); ++p)
                 {
                     int pid = (p + playerId) % g.getPlayerCount();
-                    GameMove otherMove = randomMove(g, pid, randomMethod);
+                    GameMove otherMove = enemyAI(g, pid);
                     g.performMove(otherMove);
                 }
+
+                if (step == path.size()-1)
+                {
+                    AreaFinder finder = new AreaFinder(g);
+                    finder.findAreas();
+                    for (int p = 1; p < g.getPlayerCount(); ++p)
+                    {
+                        int pid = (p + playerId) % g.getPlayerCount();
+                        enemyAreaBefore += finder.getMaxAreaAround(pid);
+                    }
+                }
+
                 g.performMove(m);
             }
+
+            int enemyAreaAfter = 0;
+            AreaFinder finder = new AreaFinder(g);
+            finder.findAreas();
+            for (int p = 1; p < g.getPlayerCount(); ++p)
+            {
+                int pid = (p + playerId) % g.getPlayerCount();
+                enemyAreaAfter += finder.getMaxAreaAround(pid);
+            }
+            
+            double enemyAreaChange = (double)enemyAreaAfter / (enemyAreaBefore+1);
 
             // If set, allow variant tracking
             if (tracker != null)
@@ -255,7 +305,7 @@ public class Odin extends AlgorithmicAI
                 scores[s] = 0;
                 if (s == playerId)
                 {
-                    scores[s] = evaluate(g, s);
+                    scores[s] = evaluate(g, s) / (enemyAreaChange + 1.0);
                 }
             }
 
@@ -283,17 +333,19 @@ public class Odin extends AlgorithmicAI
         }
 
         GameMove result = GameMove.change_nothing;
-
-        MCTSNode nextRoot = root.getChild(0);
+        MCTSNode nextRoot = root.getChild(GameMove.change_nothing);
         double max = 0;
-        for (int i = 0; i < root.getChildCount(); ++i)
+        for (GameMove move : options)
         {
-            double eval = root.getChild(i).evaluate();
-            if (eval > max)
+            if (root.getChild(move) != null)
             {
-                max = eval;
-                nextRoot = root.getChild(i);
-                result = root.getChild(i).getMove();
+                double eval = root.getChild(move).evaluate();
+                if (eval > max)
+                {
+                    max = eval;
+                    nextRoot = root.getChild(move);
+                    result = root.getChild(move).getMove();
+                }
             }
         }
 

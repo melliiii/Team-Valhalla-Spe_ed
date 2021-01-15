@@ -3,16 +3,14 @@ package src.algorithmic;
 import src.game.Game;
 import src.game.GameMove;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class MCTSNode
 {
     private int n = 0;
     private double v;
     private MCTSNode parent;
-    private MCTSNode[] children = null;
+    private Map<GameMove, MCTSNode> children = null;
     private GameMove move;
 
     public int getPlayerId()
@@ -58,10 +56,10 @@ public class MCTSNode
             return;
         }
         updateDepth(1);
-        children = new MCTSNode[options.length];
+        children = new HashMap<>();
         for (int i = 0; i < options.length; ++i)
         {
-            children[i] = new MCTSNode(this, options[i], nextPlayer);
+            children.put(options[i], new MCTSNode(this, options[i], nextPlayer));
         }
     }
 
@@ -79,19 +77,19 @@ public class MCTSNode
 
     public MCTSNode selectNode(double c)
     {
-        if (children == null || children.length == 0 || !evaluated)
+        if (children == null || children.size() == 0 || !evaluated)
         {
             return this;
         }
         double max = 0;
-        MCTSNode next = children[0];
-        for (int i = 0; i < children.length; ++i)
+        MCTSNode next = null;
+        for (Map.Entry<GameMove, MCTSNode> child : children.entrySet())
         {
-            double confidence = children[i].getConfidence(c);
-            if (confidence > max)
+            double confidence = child.getValue().getConfidence(c);
+            if (confidence >= max)
             {
                 max = confidence;
-                next = children[i];
+                next = child.getValue();
             }
         }
         return next.selectNode(c);
@@ -116,16 +114,20 @@ public class MCTSNode
         return v / n;
     }
 
-    public MCTSNode getChild(int index)
+    public MCTSNode getChild(GameMove move)
     {
-        return children[index];
+        if (!children.containsKey(move))
+        {
+            return null;
+        }
+        return children.get(move);
     }
 
     public List<GameMove> getPath()
     {
         if (parent == null)
         {
-            return new LinkedList<>();
+            return new ArrayList<>();
         }
         List<GameMove> result = parent.getPath();
         result.add(move);
@@ -153,7 +155,7 @@ public class MCTSNode
 
     public int getChildCount()
     {
-        return children.length;
+        return children.size();
     }
 
     public void resetN()
@@ -167,9 +169,9 @@ public class MCTSNode
         evaluated = false;
         if (!isLeaf())
         {
-            for (int i = 0; i < children.length; ++i)
+            for (Map.Entry<GameMove, MCTSNode> child : children.entrySet())
             {
-                children[i].resetN();
+                child.getValue().resetN();
             }
         }
     }

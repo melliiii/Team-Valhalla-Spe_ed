@@ -15,6 +15,7 @@ public class AreaFinder
     private Set<Clump>[] nAreas;
     private final Field[][] collected;
     private Game game;
+    private int areaLeft;
 
     public AreaFinder(Game game)
     {
@@ -76,6 +77,7 @@ public class AreaFinder
         nAreas[1] = new HashSet<>();
         nAreas[2] = new HashSet<>();
         nAreas[3] = new HashSet<>();
+        areaLeft = 0;
 
         for (int x = 0; x < game.getWidth(); ++x)
         {
@@ -83,6 +85,7 @@ public class AreaFinder
             {
                 if (game.getCells()[y][x] == 0)
                 {
+                    areaLeft++;
                     int c = countConnections(x, y);
                     collected[y][x] = new Field(0, c, x, y);
                     collected[y][x].setLeafCount(useC ? c : 1);
@@ -217,5 +220,15 @@ public class AreaFinder
         }
 
         return allAreas;
+    }
+
+    public int getAreaLeft()
+    {
+        return areaLeft;
+    }
+
+    public void setAreaLeft(int areaLeft)
+    {
+        this.areaLeft = areaLeft;
     }
 }

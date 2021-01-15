@@ -23,8 +23,8 @@ public class Thor extends Odin implements Strategy
         }
         setSearchMethod(SearchMethod.monte_carlo_tree);
         setDepth(3);
-        setEvalMethod(EvaluationMethod.area_div_enemies);
-        setIterations(5000);
+        setEvalMethod(EvaluationMethod.area);
+        setIterations(1000);
         setBatchSize(30);
         setExploration(1.5);//Math.sqrt(2.0));
         setMemorizeTree(true);
