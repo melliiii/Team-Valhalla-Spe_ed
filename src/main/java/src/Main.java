@@ -2,10 +2,19 @@ package src;
 
 import src.threads.WebBridge;
 
+import java.time.LocalDateTime;
+
 public class Main
 {
     public static void main(String[] args)
     {
+
+        TimeSync timeSync = new TimeSync("https://msoll.de/spe_ed_time");
+        try {
+            System.out.println("Delay zum Server: " + timeSync.calculateDelay(LocalDateTime.now()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(args.length >= 1){
             switch(args[0]){
                 case "live":
