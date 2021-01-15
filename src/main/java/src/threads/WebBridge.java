@@ -74,8 +74,6 @@ public class WebBridge
             ai = odin;
         }
 
-        LOGGER.log(Level.INFO, "Game: " + message);
-
         stage.setGame(g);
         stage.repaint();
 
@@ -92,31 +90,8 @@ public class WebBridge
 
         LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
 
-        // in synchronized thread
-
-        // Wait for Action
-        /*
-        try {
-            long timeMillisLeft =  gameState.getDeadline().getTime() - System.currentTimeMillis();
-            while(timeMillisLeft >= expected_ping){
-                Thread.sleep(timeMillisLeft / 4);
-                timeMillisLeft =  gameState.getDeadline().getTime() - System.currentTimeMillis();
-                if(gameMove_changed) break; // break if action got selected
-            }
-        } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
-        }
-
-        // if action wasnt changed make a log entry
-        if(!gameMove_changed){
-            // TODO notify synchronized thread
-            LOGGER.log(Level.WARNING, "No game move delivered in time by scoring system!");
-        }
-        */
-
         // Parse actions as JSON and send it to server
         String actionJson = "{\"action\": \"" + nextGameMove.toString() + "\"}";
-        LOGGER.log(Level.INFO, "Sending message: " + actionJson);
         websocket.sendText(actionJson);
     }
 

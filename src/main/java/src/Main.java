@@ -1,13 +1,28 @@
 package src;
 
+import src.threads.PerformanceTest;
+import src.threads.Stage;
 import src.threads.WebBridge;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 public class Main
 {
     public static void main(String[] args)
     {
+        try {
+            File headerFile = new File("header.txt");
+            Scanner headerScanner = null;
+            headerScanner = new Scanner(headerFile);
+            while(headerScanner.hasNextLine()){
+                System.out.println(headerScanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         TimeSync timeSync = new TimeSync("https://msoll.de/spe_ed_time");
         try {
@@ -36,11 +51,12 @@ public class Main
     }
 
     private static void startInPerformance(String[] args) {
-        System.out.println("Start in Performance");
+        PerformanceTest.runTest();
     }
 
     private static void startInStage(String[] args) {
-        System.out.println("Start in Stage");
+        Stage stage = new Stage("Stage", false);
+        stage.loop();
     }
 
     private static void startInLive(String[] args) {
