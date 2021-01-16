@@ -159,8 +159,11 @@ public class AreaFinder
     public int getMaxAreaAround(int playerId)
     {
         Player p = game.getPlayer(playerId);
-        int px = p.getX();
-        int py = p.getY();
+        return getMaxAreaAround(p.getX(), p.getY());
+    }
+
+    public int getMaxAreaAround(int px, int py)
+    {
         int max = 0;
         for (int i = 0; i < 4; ++i)
         {

@@ -69,7 +69,7 @@ public class WebBridge
             gameState = gson.fromJson(message, GameState.class);
         } catch (JsonSyntaxException e){
             // message is not a GameStatus Object
-            LOGGER.log(Level.INFO, "Server >> " + message);
+            LOGGER.log(Level.INFO, "Unrecognized Server Message >> " + message);
             return;
         }
 

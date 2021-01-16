@@ -6,6 +6,7 @@ import src.algorithmic.Odin;
 import src.algorithmic.VariantTracker;
 import src.game.Game;
 import src.game.GameMove;
+import src.game.Player;
 
 import java.util.*;
 
@@ -77,8 +78,6 @@ public class Thor extends Odin
         // Select a node
         MCTSNode next = root.selectNode(c);
 
-        Map<Integer, Integer> enemyAreaBefore = new HashMap<>();
-
         List<GameMove> path = next.getPath();
         Game g = start.cloneGame();
         for (int step = 0; step < path.size(); ++step)
@@ -93,39 +92,8 @@ public class Thor extends Odin
                 g.performMove(otherMove);
             }
 
-            if (step == path.size()-1)
-            {
-                AreaFinder finder = new AreaFinder(g);
-                finder.findAreas();
-                for (int p = 1; p < g.getPlayerCount(); ++p)
-                {
-                    int pid = (p + playerId) % g.getPlayerCount();
-                    enemyAreaBefore.put(pid, finder.getMaxAreaAround(pid));
-                }
-            }
-
             g.performMove(m);
         }
-
-        AreaFinder finder = new AreaFinder(g);
-        finder.findAreas();
-        int maxEnemyAreaTaken = 0;
-        if (path.size() > 0)
-        {
-            for (int p = 1; p < g.getPlayerCount(); ++p)
-            {
-                int pid = (p + playerId) % g.getPlayerCount();
-                int enemyAreaAfter = finder.getMaxAreaAround(pid);
-                int enemyAreaTaken = enemyAreaBefore.get(pid) - enemyAreaAfter;
-                if (enemyAreaTaken > maxEnemyAreaTaken)
-                {
-                    maxEnemyAreaTaken = enemyAreaTaken;
-                }
-            }
-        }
-
-        maxEnemyAreaTaken -= g.getPlayer(playerId).getSpeed();
-        maxEnemyAreaTaken /= finder.getAreaLeft();
 
         // If set, allow variant tracking
         if (tracker != null)
@@ -140,7 +108,7 @@ public class Thor extends Odin
             scores[s] = 0;
             if (s == playerId)
             {
-                scores[s] = evaluate(g, s) + maxEnemyAreaTaken;
+                scores[s] = evaluate(g, s);
             }
         }
 
