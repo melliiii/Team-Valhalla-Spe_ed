@@ -69,7 +69,7 @@ public class Main
         }
 
         boolean gui = Arrays.asList(args).contains("gui");
-        System.out.println("Starting with UI: " + (gui ? "yes" : "no") + " (add \"gui\" flag to display UI)");
+        System.out.println("Starting with UI: " + (gui ? "yes" : "no (add \"gui\" flag to display UI)"));
 
         // Remove slash at the end if it exists
         if(args[1].endsWith("/")) args[1] = args[1].substring(0, args[1].length()-2);

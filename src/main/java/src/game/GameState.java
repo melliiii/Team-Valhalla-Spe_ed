@@ -1,5 +1,6 @@
 package src.game;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public class GameState {
 
     public int you = 0;
     public boolean running = false;
-    public Date deadline;
+    public LocalDateTime deadline;
 
     public String getMap(){
         StringBuilder map = new StringBuilder();
@@ -34,7 +35,7 @@ public class GameState {
         return map + "\n";
     }
 
-    public Date getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 }

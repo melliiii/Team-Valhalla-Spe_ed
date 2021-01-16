@@ -95,7 +95,7 @@ public class WebBridge
         ai.beginTurn();
 
         // Replace this with deadline check
-        for (int i = 0; i < 300; ++i)
+        for (int i = 0; i < 500; ++i)
         {
             ai.treeSearchIteration();
         }

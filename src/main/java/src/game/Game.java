@@ -1,5 +1,6 @@
 package src.game;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -35,7 +36,7 @@ public class Game implements Cloneable
             }
         }
 
-        s.deadline = new Date();
+        s.deadline = LocalDateTime.now();
         s.height = height;
         s.width = width;
         s.players = new HashMap<>();
@@ -520,7 +521,7 @@ public class Game implements Cloneable
         return result;
     }
 
-    public Date getDeadline() {
+    public LocalDateTime getDeadline() {
         return state.deadline;
     }
 
@@ -579,7 +580,7 @@ public class Game implements Cloneable
         state.running = running;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         state.deadline = deadline;
     }
 
