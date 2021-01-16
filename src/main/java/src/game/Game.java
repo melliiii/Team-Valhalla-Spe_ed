@@ -1,11 +1,13 @@
 package src.game;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @SuppressWarnings("unused")
 public class Game implements Cloneable
 {
     private GameState state;
+
     private List<Player> players;
     private int ticks;
     private int currentPlayer = 0;
@@ -34,7 +36,7 @@ public class Game implements Cloneable
             }
         }
 
-        s.deadline = new Date();
+        s.deadline = LocalDateTime.now();
         s.height = height;
         s.width = width;
         s.players = new HashMap<>();
@@ -455,6 +457,10 @@ public class Game implements Cloneable
         return deaths.size();
     }
 
+    public List<Integer> getDeadPlayersList(){
+        return deaths;
+    }
+
     public GameState getState() {
         return state;
     }
@@ -515,7 +521,7 @@ public class Game implements Cloneable
         return result;
     }
 
-    public Date getDeadline() {
+    public LocalDateTime getDeadline() {
         return state.deadline;
     }
 
@@ -559,7 +565,7 @@ public class Game implements Cloneable
     }
 
     public int getYou() {
-        return state.you;
+        return state.you ;
     }
 
     public void setYou(int you) {
@@ -574,7 +580,7 @@ public class Game implements Cloneable
         state.running = running;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         state.deadline = deadline;
     }
 
@@ -591,6 +597,10 @@ public class Game implements Cloneable
     public int getFirstPlayer()
     {
         return firstPlayer;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 
     public void setFirstPlayer(int firstPlayer)

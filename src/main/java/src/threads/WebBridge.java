@@ -8,13 +8,14 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import src.WebSocketListener;
 import src.algorithmic.VariantTracker;
 import src.algorithmic.thor.Thor;
-import src.game.Game;
-import src.game.GameMove;
-import src.game.GameState;
+import src.game.*;
 
 import javax.sound.sampled.Line;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -44,9 +45,20 @@ public class WebBridge
     private GameState gameState;
     private GameMove nextGameMove = GameMove.change_nothing;
     private boolean gameMove_changed = false;
-    private Stage stage = new Stage(false);
+    private Stage stage;
     private Thor ai;
     private int ticks = 0;
+    private List<String> death_shown = new ArrayList<>();
+
+    private boolean verbose_logging = false;
+
+    public WebBridge(boolean minimized, boolean gui) {
+        this.stage = new Stage("Live Server", minimized, gui);
+    }
+    public WebBridge(boolean minimized, boolean gui, boolean verbose_logging) {
+        this.verbose_logging = verbose_logging;
+        this.stage = new Stage("Live Server", minimized, gui);
+    }
 
     public void handleMessage(WebSocket websocket, String message) {
         // New Gson Object
@@ -84,16 +96,27 @@ public class WebBridge
         ai.beginTurn();
 
         // Replace this with deadline check
-        LOGGER.log(Level.INFO, gameState.getDeadline().toString());
-
-        for (int i = 0; i < 300; ++i)
+        for (int i = 0; i < 500; ++i)
         {
             ai.treeSearchIteration();
         }
         nextGameMove = ai.endTurn();
         stage.setVisualizeVariants(visualizeVariants);
 
-        LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
+        if (verbose_logging) LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
+
+        List<String> recentDeaths = new ArrayList<>();
+        for(Map.Entry<String, PlayerState> playerEntry : gameState.players.entrySet())
+        {
+            if(!death_shown.contains(playerEntry.getKey()) && !playerEntry.getValue().active) recentDeaths.add(playerEntry.getKey());
+        }
+        for(String name : recentDeaths){
+            if(!name.equals(g.getPlayers().get(g.getYou()-1).getName()))
+                LOGGER.log(Level.INFO, name + " died.");
+            else LOGGER.log(Level.SEVERE, "WE DIED! That shouldn't have happened....");
+
+            death_shown.add(name);
+        }
 
         // Parse actions as JSON and send it to server
         String actionJson = "{\"action\": \"" + nextGameMove.toString() + "\"}";

@@ -27,7 +27,8 @@ public class Stage extends JPanel implements KeyListener
     public boolean humanPilot = false;
     private VariantTracker visualizeVariants;
 
-    public Stage(String title, boolean minimized)
+
+    public Stage(String title, boolean minimized, boolean gui)
     {
         super();
         addKeyListener(this);
@@ -44,15 +45,18 @@ public class Stage extends JPanel implements KeyListener
         this.game = Game.create(50, 50, names);
         //finder = new AreaFinder(game);
 
-        JFrame frame = new JFrame(title);
-        frame.add(this);
-        if (minimized)
-        {
-            frame.setState(Frame.ICONIFIED);
+        if(gui){
+            JFrame frame = new JFrame(title);
+            frame.add(this);
+            if (minimized)
+            {
+                frame.setState(Frame.ICONIFIED);
+            }
+            frame.setSize(500, 500);
+            frame.setVisible(true);
+            setBackground(Color.darkGray);
         }
-        frame.setSize(500, 500);
-        frame.setVisible(true);
-        setBackground(Color.darkGray);
+
     }
 
     public Stage(boolean minimized)
