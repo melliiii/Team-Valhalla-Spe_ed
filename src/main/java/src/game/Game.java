@@ -1,6 +1,8 @@
 package src.game;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -36,7 +38,7 @@ public class Game implements Cloneable
             }
         }
 
-        s.deadline = LocalDateTime.now();
+        s.deadline = java.sql.Timestamp.valueOf(LocalDateTime.now());
         s.height = height;
         s.width = width;
         s.players = new HashMap<>();
@@ -522,7 +524,7 @@ public class Game implements Cloneable
     }
 
     public LocalDateTime getDeadline() {
-        return state.deadline;
+        return state.deadline.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     public int getWidth() {
@@ -581,7 +583,7 @@ public class Game implements Cloneable
     }
 
     public void setDeadline(LocalDateTime deadline) {
-        state.deadline = deadline;
+        state.deadline = Timestamp.valueOf(deadline);
     }
 
     public boolean positionExists(int px, int py)

@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -21,8 +20,7 @@ public class TimeSync {
     }
 
     public long calculateDelay(LocalDateTime systemtime) {
-        LocalDateTime servertime = getServertime();
-        return ChronoUnit.NANOS.between(systemtime, servertime) / 1000000;
+        return ChronoUnit.NANOS.between(systemtime, getServertime()) / 1000000;
     }
 
     /*
