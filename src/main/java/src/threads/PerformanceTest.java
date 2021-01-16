@@ -81,19 +81,20 @@ public class PerformanceTest
 
         for (int i = 0; i < playerCount; ++i)
         {
-            if (i == 0)
+            if (i == 1)
             {
                 Thor a = new Thor(game, i);
-                a.setIterations(100);
+                a.setIterations(500);
+                a.setExploration(0);
                 a.setMemorizeTree(true);
                 ais[i] = a;
             }
             else
             {
                 Thor a = new Thor(game, i);
-                a.setIterations(100);
-                a.setMemorizeTree(false);
-                a.setEvalMethod(Odin.EvaluationMethod.area_div_enemies);
+                a.setIterations(1000);
+                a.setMemorizeTree(true);
+                a.setExploration(0);
                 ais[i] = a;
             }
         }

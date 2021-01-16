@@ -66,7 +66,7 @@ public class Odin extends AlgorithmicAI
         }
         finder.setGame(current);
         finder.findAreas();
-        HashSet<Clump> areas = new HashSet<>();
+        HashSet<Connector> areas = new HashSet<>();
         int enemySum = 0;
 
         double score = 0;
@@ -104,7 +104,7 @@ public class Odin extends AlgorithmicAI
         }
 
         double allAreas = 0;
-        for (Clump area : areas)
+        for (Connector area : areas)
         {
             if (area != null)
             {
@@ -157,7 +157,6 @@ public class Odin extends AlgorithmicAI
 
             if (eval > 0 && eval > max * (1.0 / exploration) && depth > 0)
             {
-                assert next != null;
                 eval = max(next, playerId, max, depth-1)[0].doubleValue();
             }
             if (eval > max)

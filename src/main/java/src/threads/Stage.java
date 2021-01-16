@@ -112,8 +112,9 @@ public class Stage extends JPanel implements KeyListener
                 }
                 if (visualizeVariants != null && game.getCells()[y][x] == 0)
                 {
-                    float scale = (float) Math.sqrt(Math.sqrt(visualizeVariants.getAvgVisits(x, y)));
-                    g.setColor(new Color(0, scale, 0));
+                    double scale = Math.sqrt(Math.sqrt(visualizeVariants.getAvgVisits(x, y)));
+                    double enemyScale = Math.sqrt(Math.sqrt(visualizeVariants.getAvgEnemyVisits(x, y)));
+                    g.setColor(new Color((float)enemyScale / 2, (float) scale, 0));
                 }
 
                 int cellX = x * cellWidth + centerX - game.getCells()[y].length * cellWidth / 2;
@@ -188,16 +189,8 @@ public class Stage extends JPanel implements KeyListener
                 Thor a = new Thor(game, i);
                 visualizeVariants = new VariantTracker(game, i);
                 a.setTracker(visualizeVariants);
-                a.setIterations(500);
+                a.setIterations(1000);
                 a.setMemorizeTree(true);
-                ais[i] = a;
-            }
-            else if (i == 1)
-            {
-                Thor a = new Thor(game, i);
-                a.setIterations(500);
-                a.setMemorizeTree(true);
-                a.setEvalMethod(Odin.EvaluationMethod.area_div_enemies);
                 ais[i] = a;
             }
             else

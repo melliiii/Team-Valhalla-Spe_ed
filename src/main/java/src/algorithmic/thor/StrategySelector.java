@@ -22,7 +22,6 @@ public class StrategySelector
     double aggro = 0;                           // Current Algorithm Aggressiveness
     double baseAggro = 0.5;                     // Default Aggressiveness
     HashMap<Player, Double> playerAggro;        // Aggressiveness of each player in the Lobby
-    HashMap<Player, Area> playerClaims;         // Claims of each player
 
     public StrategySelector()
     {
@@ -101,15 +100,5 @@ public class StrategySelector
     public void setPlayerAggro(HashMap<Player, Double> playerAggro)
     {
         this.playerAggro = playerAggro;
-    }
-
-    public HashMap<Player, Area> getPlayerClaims()
-    {
-        return playerClaims;
-    }
-
-    public void setPlayerClaims(HashMap<Player, Area> playerClaims)
-    {
-        this.playerClaims = playerClaims;
     }
 }

@@ -3,15 +3,15 @@ package src.algorithmic;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Clump
+public class Connector
 {
     private int layer;
-    private Clump parent;
+    private Connector parent;
     private int leafCount;
-    private Set<Clump> children;
+    private Set<Connector> children;
     public static int initialCapacity;
 
-    public Clump(int layer)
+    public Connector(int layer)
     {
         this.layer = layer;
         parent = null;
@@ -34,7 +34,7 @@ public class Clump
         this.layer = layer;
     }
 
-    public Clump getParent() {
+    public Connector getParent() {
         return parent;
     }
 
@@ -46,7 +46,7 @@ public class Clump
         updateLeafCount(leafCount);
     }
 
-    public Set<Clump> getChildren() {
+    public Set<Connector> getChildren() {
         return children;
     }
 
@@ -76,7 +76,7 @@ public class Clump
         leafCount = value;
     }
 
-    private void setParent(Clump newParent)
+    private void setParent(Connector newParent)
     {
         if (parent != null)
         {
@@ -99,7 +99,7 @@ public class Clump
         }
     }
 
-    public Clump getHead()
+    public Connector getHead()
     {
         if (parent == null)
         {
@@ -112,13 +112,13 @@ public class Clump
         return parent.getHead();
     }
 
-    public Clump getLastHead()
+    public Connector getLastHead()
     {
         if (parent == null)
         {
             return this;
         }
-        Clump head = getHead();
+        Connector head = getHead();
         if(head.isSealed())
         {
             return head.getLastHead();
@@ -126,7 +126,7 @@ public class Clump
         return head;
     }
 
-    public static void merge(Clump c1, Clump c2)
+    public static void merge(Connector c1, Connector c2)
     {
         if (c1.getHead() == c2.getHead())
         {
@@ -149,7 +149,7 @@ public class Clump
         {
             if (c2.getParent() == null)
             {
-                Clump p = new Clump(c1.getLayer() + 1);
+                Connector p = new Connector(c1.getLayer() + 1);
                 c1.setParent(p);
                 c2.setParent(p);
             }

@@ -5,14 +5,11 @@ import src.game.Game;
 import src.game.Player;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 public class AreaFinder
 {
     //private List<Field>[] nConnected;
-    //private Set<Clump>[] nAreas;
+    //private Set<Connector>[] nAreas;
     private final Field[][] collected;
     private Game game;
     private int areaLeft;
@@ -20,7 +17,7 @@ public class AreaFinder
     public AreaFinder(Game game)
     {
         this.game = game;
-        Clump.initialCapacity = game.getWidth() * game.getHeight();
+        Connector.initialCapacity = game.getWidth() * game.getHeight();
         collected = new Field[game.getHeight()][game.getWidth()];
     }
 
@@ -35,7 +32,7 @@ public class AreaFinder
                             collected[y][x].getConnections()*/
                 )
             {
-                Clump.merge(collected[y + dxy[1]][x + dxy[0]], collected[y][x]);
+                Connector.merge(collected[y + dxy[1]][x + dxy[0]], collected[y][x]);
             }
         }
     }
@@ -104,16 +101,16 @@ public class AreaFinder
 
         //for (int i = 3; false && i >= 0; --i)
         //{
-        //    Set<Clump> grab = new HashSet<>();
+        //    Set<Connector> grab = new HashSet<>();
         //    for (Field f : nConnected[i])
         //    {
         //        connectAt(f.getX(), f.getY());
         //        grab.add(f.getHead());
         //    }
-        //    Set<Clump> areas = new HashSet<>();
-        //    for (Clump c : grab)
+        //    Set<Connector> areas = new HashSet<>();
+        //    for (Connector c : grab)
         //    {
-        //        Clump next = c;
+        //        Connector next = c;
         //        if (!c.isSealed())
         //        {
         //            next = c.getHead();
@@ -146,7 +143,7 @@ public class AreaFinder
         return collected[py][px];
     }
 
-    public Clump getClumpAt(int px, int py)
+    public Connector getClumpAt(int px, int py)
     {
         if (!game.positionExists(px, py))
         {
@@ -193,7 +190,7 @@ public class AreaFinder
 
     public double getReachableGameArea()
     {
-        HashSet<Clump> areas = new HashSet<>();
+        HashSet<Connector> areas = new HashSet<>();
 
         for (int p = 0; p < game.getPlayerCount(); ++p)
         {
@@ -212,7 +209,7 @@ public class AreaFinder
         }
 
         double allAreas = 0;
-        for (Clump area : areas)
+        for (Connector area : areas)
         {
             if (area != null)
             {

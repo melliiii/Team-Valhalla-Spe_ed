@@ -212,7 +212,7 @@ public abstract class AlgorithmicAI
         Comparator<Player> comp = new DistanceComparator(player);
         SortedSet<Player> result = new TreeSet<>(comp);
 
-        Clump ownSpace = finder.getClumpAt(player.getNextX(), player.getNextY());
+        Connector ownSpace = finder.getClumpAt(player.getNextX(), player.getNextY());
         for(int p = 0; p < current.getPlayerCount(); ++p)
         {
             if (p != playerId)

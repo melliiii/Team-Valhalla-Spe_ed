@@ -163,8 +163,8 @@ public class MCTSNode
         {
             return;
         }
-        v /= n;
-        n = 1;
+        //v /= n;
+        //n = 1;
         evaluated = false;
         if (!isLeaf())
         {

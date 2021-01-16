@@ -12,6 +12,7 @@ import src.game.Game;
 import src.game.GameMove;
 import src.game.GameState;
 
+import javax.sound.sampled.Line;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -77,12 +78,14 @@ public class WebBridge
         //gameMove_changed = false;
 
         VariantTracker visualizeVariants = new VariantTracker(g, gameState.you-1);
-        ((Thor)ai).setTracker(visualizeVariants);
+        ai.setTracker(visualizeVariants);
 
         ai.setGame(g);
         ai.beginTurn();
 
         // Replace this with deadline check
+        LOGGER.log(Level.INFO, gameState.getDeadline().toString());
+
         for (int i = 0; i < 300; ++i)
         {
             ai.treeSearchIteration();

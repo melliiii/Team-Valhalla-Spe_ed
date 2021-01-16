@@ -7,9 +7,7 @@ import src.algorithmic.VariantTracker;
 import src.game.Game;
 import src.game.GameMove;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Thor extends Odin
 {
@@ -33,7 +31,7 @@ public class Thor extends Odin
         setEvalMethod(EvaluationMethod.area);
         setIterations(1000);
         setBatchSize(30);
-        setExploration(Math.sqrt(2.0));
+        setExploration(0.0);//Math.sqrt(2.0));
         setMemorizeTree(true);
         setRandomMethod(RandomMethod.equal);
     }
@@ -79,7 +77,7 @@ public class Thor extends Odin
         // Select a node
         MCTSNode next = root.selectNode(c);
 
-        int enemyAreaBefore = 0;
+        Map<Integer, Integer> enemyAreaBefore = new HashMap<>();
 
         List<GameMove> path = next.getPath();
         Game g = start.cloneGame();
@@ -102,23 +100,32 @@ public class Thor extends Odin
                 for (int p = 1; p < g.getPlayerCount(); ++p)
                 {
                     int pid = (p + playerId) % g.getPlayerCount();
-                    enemyAreaBefore += finder.getMaxAreaAround(pid);
+                    enemyAreaBefore.put(pid, finder.getMaxAreaAround(pid));
                 }
             }
 
             g.performMove(m);
         }
 
-        int enemyAreaAfter = 0;
         AreaFinder finder = new AreaFinder(g);
         finder.findAreas();
-        for (int p = 1; p < g.getPlayerCount(); ++p)
+        int maxEnemyAreaTaken = 0;
+        if (path.size() > 0)
         {
-            int pid = (p + playerId) % g.getPlayerCount();
-            enemyAreaAfter += finder.getMaxAreaAround(pid);
+            for (int p = 1; p < g.getPlayerCount(); ++p)
+            {
+                int pid = (p + playerId) % g.getPlayerCount();
+                int enemyAreaAfter = finder.getMaxAreaAround(pid);
+                int enemyAreaTaken = enemyAreaBefore.get(pid) - enemyAreaAfter;
+                if (enemyAreaTaken > maxEnemyAreaTaken)
+                {
+                    maxEnemyAreaTaken = enemyAreaTaken;
+                }
+            }
         }
 
-        double enemyAreaTaken = (double) enemyAreaBefore / (enemyAreaAfter+1);
+        maxEnemyAreaTaken -= g.getPlayer(playerId).getSpeed();
+        maxEnemyAreaTaken /= finder.getAreaLeft();
 
         // If set, allow variant tracking
         if (tracker != null)
@@ -133,7 +140,7 @@ public class Thor extends Odin
             scores[s] = 0;
             if (s == playerId)
             {
-                scores[s] = evaluate(g, s) * (Math.pow(enemyAreaTaken, 2.0) + 0.1);
+                scores[s] = evaluate(g, s) + maxEnemyAreaTaken;
             }
         }
 

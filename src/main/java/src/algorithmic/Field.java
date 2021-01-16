@@ -1,6 +1,6 @@
 package src.algorithmic;
 
-public class Field extends Clump
+public class Field extends Connector
 {
     private int x;
     private int y;
@@ -39,9 +39,9 @@ public class Field extends Clump
         return connections;
     }
 
-    public Clump getNConnectedArea(int n)
+    public Connector getNConnectedArea(int n)
     {
-        Clump node = this;
+        Connector node = this;
         for (int i = 0; i < 4 - n; ++i)
         {
             if (node == null)
