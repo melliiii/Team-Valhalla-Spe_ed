@@ -1,6 +1,7 @@
 package src.game;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class GameState {
 
     public int you = 0;
     public boolean running = false;
-    public LocalDateTime deadline;
+    public Date deadline;
 
     public String getMap(){
         StringBuilder map = new StringBuilder();
@@ -36,6 +37,6 @@ public class GameState {
     }
 
     public LocalDateTime getDeadline() {
-        return deadline;
+        return deadline.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }
