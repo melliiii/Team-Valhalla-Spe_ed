@@ -13,6 +13,7 @@ import src.game.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +51,16 @@ public class WebBridge
     private Thor ai;
     private int ticks = 0;
     private List<String> death_shown = new ArrayList<>();
+    public TimeSync timeSync;
 
     private boolean verbose_logging = true;
 
-    public WebBridge(boolean minimized, boolean gui) {
+    public WebBridge(boolean minimized, boolean gui, TimeSync timeSync) {
+        this.timeSync = timeSync;
         this.stage = new Stage("Live Server", minimized, gui);
     }
-    public WebBridge(boolean minimized, boolean gui, boolean verbose_logging) {
+    public WebBridge(boolean minimized, boolean gui, TimeSync timeSync, boolean verbose_logging) {
+        this.timeSync = timeSync;
         this.verbose_logging = verbose_logging;
         this.stage = new Stage("Live Server", minimized, gui);
     }

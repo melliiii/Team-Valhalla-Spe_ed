@@ -25,12 +25,7 @@ public class Main
             e.printStackTrace();
         }
 
-        TimeSync timeSync = new TimeSync("https://msoll.de/spe_ed_time");
-        try {
-            System.out.println("Delay zum Server: " + timeSync.calculateDelay(LocalDateTime.now()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         if(args.length >= 1){
             switch(args[0]){
                 case "live":
@@ -67,6 +62,12 @@ public class Main
             System.out.println("Wrong Format! Use: start SERVER_URL API_KEY TIME_SERVER");
             return;
         }
+        TimeSync timeSync = new TimeSync(args[3]);
+        try {
+            System.out.println("Delay zum Server: " + timeSync.calculateDelay(LocalDateTime.now()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         boolean gui = Arrays.asList(args).contains("gui");
         System.out.println("Starting with UI: " + (gui ? "yes" : "no (add \"gui\" flag to display UI)"));
@@ -75,7 +76,7 @@ public class Main
         if(args[1].endsWith("/")) args[1] = args[1].substring(0, args[1].length()-2);
 
         // Initiate WebBridge
-        WebBridge webBridge = new WebBridge(false, gui);
+        WebBridge webBridge = new WebBridge(false, gui, timeSync);
         webBridge.setUrl(args[1] + "?key=" + args[2]);
 
         // Start WebBridge
