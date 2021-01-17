@@ -101,9 +101,9 @@ public class WebBridge
         ai.beginTurn();
 
         long timer = System.currentTimeMillis();
-        TimeSync sync = new TimeSync("https://msoll.de/spe_ed_time");
+
         LocalDateTime deadLine = gameState.getDeadline();
-        long timeSlot = sync.calculateDelay(deadLine) - 500;
+        long timeSlot = timeSync.calculateDelay(deadLine) - 500;
 
         int iterations = 0;
         while (System.currentTimeMillis() - timer < timeSlot)
