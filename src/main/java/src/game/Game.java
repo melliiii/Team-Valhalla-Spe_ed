@@ -30,9 +30,9 @@ public class Game implements Cloneable
         GameState s = new GameState();
         s.cells = new int[height][width];
 
-        for (int i = 0; i < width; ++i)
+        for (int i = 0; i < height; ++i)
         {
-            for (int j = 0; j < height; ++j)
+            for (int j = 0; j < width; ++j)
             {
                 s.cells[i][j] = 0;
             }

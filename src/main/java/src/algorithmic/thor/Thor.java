@@ -17,7 +17,7 @@ public class Thor extends Odin
     private MCTSNode root;
     private VariantTracker tracker = null;
     private int iterations = 100;
-    protected int batchSize = 10;
+    protected int batchSize = 1;
     private Game start;
 
     public Thor(Game game, int playerId)
@@ -31,8 +31,7 @@ public class Thor extends Odin
         setDepth(3);
         setEvalMethod(EvaluationMethod.area);
         setIterations(1000);
-        setBatchSize(30);
-        setExploration(0.0);//Math.sqrt(2.0));
+        setExploration(0);//Math.sqrt(2.0));
         setMemorizeTree(true);
         setRandomMethod(RandomMethod.equal);
     }

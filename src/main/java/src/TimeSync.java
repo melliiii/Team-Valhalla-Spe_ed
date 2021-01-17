@@ -19,8 +19,8 @@ public class TimeSync {
         this.url = url;
     }
 
-    public long calculateDelay(LocalDateTime systemtime) {
-        return ChronoUnit.NANOS.between(systemtime, getServertime()) / 1000000;
+    public long calculateDelay(LocalDateTime time) {
+        return ChronoUnit.NANOS.between(getServertime(), time) / 1000000;
     }
 
     /*

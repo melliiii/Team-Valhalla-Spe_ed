@@ -5,14 +5,15 @@ import com.google.gson.JsonSyntaxException;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import src.TimeSync;
 import src.WebSocketListener;
 import src.algorithmic.VariantTracker;
 import src.algorithmic.thor.Thor;
 import src.game.*;
 
-import javax.sound.sampled.Line;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class WebBridge
     private int ticks = 0;
     private List<String> death_shown = new ArrayList<>();
 
-    private boolean verbose_logging = false;
+    private boolean verbose_logging = true;
 
     public WebBridge(boolean minimized, boolean gui) {
         this.stage = new Stage("Live Server", minimized, gui);
@@ -95,15 +96,25 @@ public class WebBridge
         ai.setGame(g);
         ai.beginTurn();
 
-        // Replace this with deadline check
-        for (int i = 0; i < 500; ++i)
+        long timer = System.currentTimeMillis();
+        TimeSync sync = new TimeSync("https://msoll.de/spe_ed_time");
+        LocalDateTime deadLine = gameState.getDeadline();
+        long timeSlot = sync.calculateDelay(deadLine) - 100;
+
+        int iterations = 0;
+        while (System.currentTimeMillis() - timer < timeSlot)
         {
+            iterations++;
             ai.treeSearchIteration();
         }
+
         nextGameMove = ai.endTurn();
         stage.setVisualizeVariants(visualizeVariants);
 
-        if (verbose_logging) LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString());
+        if (verbose_logging)
+        {
+            LOGGER.log(Level.INFO, "Decision: " + nextGameMove.toString() +", Iterations: " + iterations + ", Timeslot: " + timeSlot + "ms");
+        }
 
         List<String> recentDeaths = new ArrayList<>();
         for(Map.Entry<String, PlayerState> playerEntry : gameState.players.entrySet())

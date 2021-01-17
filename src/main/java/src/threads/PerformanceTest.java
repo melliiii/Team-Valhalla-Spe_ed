@@ -77,11 +77,11 @@ public class PerformanceTest
         {
             players.add(String.valueOf(i));
         }
-        Game game = Game.create(50, 50, players);
+        Game game = Game.create(30, 50, players);
 
         for (int i = 0; i < playerCount; ++i)
         {
-            if (i == 1)
+            if (i == 0)
             {
                 Thor a = new Thor(game, i);
                 a.setIterations(500);
@@ -92,8 +92,8 @@ public class PerformanceTest
             else
             {
                 Thor a = new Thor(game, i);
-                a.setIterations(1000);
-                a.setMemorizeTree(true);
+                a.setIterations(500);
+                a.setMemorizeTree(false);
                 a.setExploration(0);
                 ais[i] = a;
             }
