@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="WebSocket Original Server" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="src.Main" />
-    <module name="SpeedWebsocketTest" />
+    <module name="TeamValhalla-Thor" />
     <option name="PROGRAM_PARAMETERS" value="live wss://msoll.de/spe_ed A534MVSB3KOJLTSSJ6JRVYEA5JMOQ366VIV6E7EJWJ7DE3SMMASOKIQM https://msoll.de/spe_ed_time" />
     <method v="2">
       <option name="Make" enabled="true" />
