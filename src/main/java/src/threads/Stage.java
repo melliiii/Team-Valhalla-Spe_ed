@@ -194,7 +194,7 @@ public class Stage extends JPanel implements KeyListener
                 visualizeVariants = new VariantTracker(game, i);
                 a.setTracker(visualizeVariants);
                 a.setEvalMethod(Odin.EvaluationMethod.area);
-                a.setIterations(500);
+                a.setIterations(1000);
                 a.setMemorizeTree(true);
                 ais[i] = a;
             }
